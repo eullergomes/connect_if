@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 
 void main() {
@@ -32,35 +33,14 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo
                 Image.asset(
                   'assets/images/logo.png',
                   height: 100,
                 ),
                 const SizedBox(height: 20),
-                // Nome da aplicação estilizado
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'CONNECT',
-                        style: TextStyle(
-                            fontSize: 32,
-                            fontFamily: 'OpenSans',
-                            fontWeight: FontWeight.bold,
-                            color: AppThemeCustom.green500),
-                      ),
-                      TextSpan(
-                        text: 'IF',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontFamily: 'OpenSans',
-                          fontWeight: FontWeight.w900,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
+                SvgPicture.asset(
+                  'assets/images/connect_if.svg',
+                  height: 40,
                 ),
                 const SizedBox(height: 8),
                 const Text(
@@ -68,7 +48,6 @@ class LoginScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
                 const SizedBox(height: 40),
-                // Campo Matrícula
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -87,8 +66,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: AppThemeCustom.green400, // Borda ao focar
-                        width: 1, // Borda mais espessa ao focar
+                        color: AppThemeCustom.green400,
+                        width: 1,
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -98,7 +77,6 @@ class LoginScreen extends StatelessWidget {
                   style: TextStyle(color: AppThemeCustom.gray900),
                 ),
                 const SizedBox(height: 20),
-                // Campo Senha
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -111,18 +89,18 @@ class LoginScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: AppThemeCustom.gray800, // Borda padrão (gray800)
+                        color: AppThemeCustom.gray800,
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: AppThemeCustom.green400, // Borda ao focar
-                        width: 1, // Borda mais espessa ao focar
+                        color: AppThemeCustom.green400,
+                        width: 1,
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    hintText: 'Digite sua senha', // Texto placeholder
+                    hintText: 'Digite sua senha',
                     hintStyle: TextStyle(color: AppThemeCustom.gray600),
                   ),
                   style: TextStyle(color: AppThemeCustom.gray900),
@@ -143,7 +121,7 @@ class LoginScreen extends StatelessWidget {
                         backgroundColor: AppThemeCustom.green500),
                     child: const Text(
                       'Entrar na conta',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                      style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
                 ),

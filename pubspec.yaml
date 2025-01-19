@@ -35,6 +35,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  flutter_svg: ^2.0.5 # rendering svg images
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,6 +58,11 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+   # assets configuration
+  assets:
+    - assets/images/logo.png  # Caminho para o arquivo PNG
+    - assets/images/connect_if.svg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
