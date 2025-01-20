@@ -1,3 +1,4 @@
+import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:connect_if/screens/feed_screen.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BottomNavigationBar Example',
+      title: 'BottomNavigationBar',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -39,7 +40,7 @@ class HomePageState extends State<HomePage> {
     const FeedScreen(),
     const ChatScreen(),
     const CreatePostScreen(),
-    const ProfileScreen(),
+    ProfileScreen(),
   ];
 
   final List<String> _titles = ['Feed', 'Conversas', 'Criar', 'Perfil'];
@@ -60,7 +61,12 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: PreferredSize( 
+        preferredSize: const Size.fromHeight(0.0),
+        child: AppBar( 
+          elevation: 0,
+        ), 
+      ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -73,13 +79,13 @@ class HomePageState extends State<HomePage> {
               _icons[index],
               height: 24,
               width: 24,
-              colorFilter: ColorFilter.mode( _currentIndex == index ? Colors.green : Colors.black, BlendMode.srcIn, ),
+              colorFilter: ColorFilter.mode( _currentIndex == index ? AppThemeCustom.green400 : AppThemeCustom.black, BlendMode.srcIn, ),
             ),
             label: _titles[index],
           );
         }),
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.black54,
+        selectedItemColor: AppThemeCustom.green400,
+        unselectedItemColor: AppThemeCustom.black,
         type: BottomNavigationBarType.fixed,
         selectedLabelStyle: const TextStyle(fontSize: 14),
         unselectedLabelStyle: const TextStyle(fontSize: 14),
