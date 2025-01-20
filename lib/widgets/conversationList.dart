@@ -7,7 +7,15 @@ class ConversationList extends StatefulWidget{
   final String imageUrl;
   final String time;
   final bool isMessageRead;
-  ConversationList({required this.name, required this.messageText, required this.imageUrl, required this.time, required this.isMessageRead});
+  
+  const ConversationList({
+    super.key, 
+    required this.name, 
+    required this.messageText, 
+    required this.imageUrl, 
+    required this.time, 
+    required this.isMessageRead
+  });
   @override
   ConversationListState createState() => ConversationListState();
 }
@@ -18,7 +26,10 @@ class ConversationListState extends State<ConversationList> {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ChatDetailPage();
+          return ChatDetailsScreen(
+            name: widget.name,
+            imageUrl: widget.imageUrl,
+          );
         }));
       },
       child: Container(
@@ -29,7 +40,7 @@ class ConversationListState extends State<ConversationList> {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(widget.imageUrl),
+                    backgroundImage: AssetImage(widget.imageUrl),
                     maxRadius: 30,
                   ),
                   SizedBox(width: 16,),

@@ -37,7 +37,7 @@ class ChatScreenState extends State<ChatScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "Conversations",
+                          "Conversas",
                           style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                         ),
                         Container(
@@ -52,7 +52,7 @@ class ChatScreenState extends State<ChatScreen> {
                               Icon(Icons.add, color: Colors.pink, size: 20),
                               SizedBox(width: 2),
                               Text(
-                                "Add New",
+                                "Adicionar",
                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -64,7 +64,7 @@ class ChatScreenState extends State<ChatScreen> {
                       padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: "Search...",
+                          hintText: "Pesquisar...",
                           hintStyle: TextStyle(color: Colors.grey.shade600),
                           prefixIcon: Icon(Icons.search, color: Colors.grey.shade600, size: 20),
                           filled: true,

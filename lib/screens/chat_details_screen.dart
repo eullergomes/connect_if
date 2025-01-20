@@ -1,12 +1,23 @@
+import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:connect_if/models/chat_message_model.dart';
 
-class ChatDetailPage extends StatefulWidget{
+class ChatDetailsScreen extends StatefulWidget{
+
+  final String name;
+  final String imageUrl;
+
+  const ChatDetailsScreen({
+    super.key,
+    required this.name,
+    required this.imageUrl,
+  });
+
   @override
-  _ChatDetailPageState createState() => _ChatDetailPageState();
+  ChatDetailsScreenState createState() => ChatDetailsScreenState();
 }
 
-class _ChatDetailPageState extends State<ChatDetailPage> {
+class ChatDetailsScreenState extends State<ChatDetailsScreen> {
   List<ChatMessage> messages = [
     ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
     ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
@@ -31,11 +42,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   onPressed: (){
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.arrow_back,color: Colors.black,),
+                  icon: Icon(Icons.arrow_back,color: AppThemeCustom.black,),
                 ),
                 SizedBox(width: 2,),
                 CircleAvatar(
-                  backgroundImage: NetworkImage("<https://randomuser.me/api/portraits/men/5.jpg>"),
+                  backgroundImage: AssetImage(widget.imageUrl), // imagem dinâmica
                   maxRadius: 20,
                 ),
                 SizedBox(width: 12,),
@@ -44,13 +55,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Kriss Benwat",style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
+                      Text(widget.name,style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),), // nome dinêmico
                       SizedBox(height: 6,),
                       Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
                     ],
                   ),
                 ),
-                Icon(Icons.settings,color: Colors.black54,),
+                Icon(Icons.settings,color: AppThemeCustom.black,),
               ],
             ),
           ),
@@ -71,7 +82,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: (messages[index].messageType  == "receiver"?Colors.grey.shade200:Colors.blue[200]),
+                      color: (messages[index].messageType  == "receiver"?Colors.grey.shade200:AppThemeCustom.green400),
                     ),
                     padding: EdgeInsets.all(16),
                     child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
@@ -86,7 +97,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
               height: 60,
               width: double.infinity,
-              color: Colors.white,
+              color: AppThemeCustom.white,
               child: Row(
                 children: <Widget>[
                   GestureDetector(
@@ -96,18 +107,18 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       height: 30,
                       width: 30,
                       decoration: BoxDecoration(
-                        color: Colors.lightBlue,
+                        color: AppThemeCustom.green500, // alterar aqui
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: Icon(Icons.add, color: Colors.white, size: 20, ),
+                      child: Icon(Icons.add, color: AppThemeCustom.white, size: 20, ),
                     ),
                   ),
                   SizedBox(width: 15,),
                   Expanded(
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: "Write message...",
-                        hintStyle: TextStyle(color: Colors.black54),
+                        hintText: "Escreva uma mensagem...",
+                        hintStyle: TextStyle(color: AppThemeCustom.black),
                         border: InputBorder.none
                       ),
                     ),
@@ -115,9 +126,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   SizedBox(width: 15,),
                   FloatingActionButton(
                     onPressed: () {},
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppThemeCustom.green500,
                     elevation: 0,
-                    child: Icon(Icons.send, color: Colors.white, size: 18),
+                    child: Icon(Icons.send, color: AppThemeCustom.white, size: 18),
                   )
                 ],
 
