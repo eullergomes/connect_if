@@ -1,5 +1,5 @@
 name: connect_if
-description: "A new Flutter project."
+description: "App de rede social voltado para a comunidade acadêmica científica do IFMA - Campus Caxias"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -36,6 +36,22 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   flutter_svg: ^2.0.5 # rendering svg images
+  flutter_native_splash: ^2.4.4 # splash screen
+  flutter_launcher_icons: "^0.14.3" # app icon 
+
+flutter_native_splash:
+  color: "#319945"
+  image: assets/images/new_splash.png
+  android: true
+  ios: true
+
+flutter_launcher_icons:
+  image_path: "assets/images/icon.png"
+  ios: true
+  remove_alpha_ios: true
+  android: "launcher_icon"
+  adaptive_icon_background: "#319945"
+  adaptive_icon_foreground: "assets/images/splash_transparent.png"
 
 dev_dependencies:
   flutter_test:
@@ -61,8 +77,21 @@ flutter:
 
    # assets configuration
   assets:
-    - assets/images/logo.png  # Caminho para o arquivo PNG
+    - assets/images/logo.png
     - assets/images/connect_if.svg
+    - assets/images/feed_icon_black.svg
+    - assets/images/conversations_icon.svg
+    - assets/images/create_icon.svg
+    - assets/images/profile_icon.svg
+    - assets/images/my_user.jpg
+    - assets/images/userImage1.jpg
+    - assets/images/userImage2.jpg
+    - assets/images/userImage3.jpg
+    - assets/images/userImage4.jpg
+    - assets/images/userImage5.jpg
+    - assets/images/userImage6.jpg
+    - assets/images/userImage7.jpg
+    - assets/images/userImage8.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
