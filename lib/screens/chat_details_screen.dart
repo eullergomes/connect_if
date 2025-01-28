@@ -46,7 +46,7 @@ class ChatDetailsScreenState extends State<ChatDetailsScreen> {
                 ),
                 SizedBox(width: 2,),
                 CircleAvatar(
-                  backgroundImage: AssetImage(widget.imageUrl), // imagem dinâmica
+                  backgroundImage: AssetImage(widget.imageUrl),
                   maxRadius: 20,
                 ),
                 SizedBox(width: 12,),
@@ -55,7 +55,7 @@ class ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(widget.name,style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),), // nome dinêmico
+                      Text(widget.name,style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
                       SizedBox(height: 6,),
                       Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
                     ],
