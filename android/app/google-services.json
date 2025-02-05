@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5677068784",
+    "project_id": "connectif-f2812",
+    "storage_bucket": "connectif-f2812.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5677068784:android:1c493611378f12f7b72d35",
+        "android_client_info": {
+          "package_name": "com.example.connect_if"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaap6V1VHSifP8PbvXE-Eh5U4QlOrSB-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
