@@ -1,7 +1,9 @@
 import 'package:connect_if/features/auth/presentation/components/my_button.dart';
 import 'package:connect_if/features/auth/presentation/components/my_text_field.dart';
+import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? togglePages;
@@ -19,6 +21,50 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
+  // register button pressed
+  void register() {
+    final String name = nameController.text;
+    final String email = emailController.text;
+    final String password = passwordController.text;
+    final String confirmPassword = confirmPasswordController.text;
+
+    // auth cubit
+    final authCubit = context.read<AuthCubit>();
+
+    // ensure fields are not empty
+    if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
+      // ensure passwords match
+      if (password == confirmPassword) {
+        authCubit.register(name, email, password);
+      }
+      // passwords do not match
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("As senhas não coincidem"),
+          ),
+        );
+      }
+    }
+    // fields are empt -> display error
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Por favor, preencha todos os campos"),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 // register button
                 MyButton(
-                  onTap: () {},
+                  onTap: register,
                   text: "Criar conta",
                 ),
 
