@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connect_if/features/profile/presentation/components/bio_box.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_states.dart';
@@ -72,21 +73,31 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
             
                 // profile pic
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppThemeCustom.green400,
-                    borderRadius: BorderRadius.circular(12),
+                CachedNetworkImage(
+                  imageUrl: user.profileImageUrl,
+                  // loading
+                  placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+
+                  // error -> failed to load
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.person,
+                    size: 72,
+                    color: AppThemeCustom.gray800,
                   ),
-                  height: 120,
-                  width: 120,
-                  padding: const EdgeInsets.all(25),
-                  child: Center(
-                    child: Icon(
-                      Icons.person,
-                      size: 72,
-                      color: AppThemeCustom.gray400,
+
+                  // loaded
+                  imageBuilder: (context, imageProvider) => Container(
+                    height: 120,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      )
                     ),
-                  ),
+                  ),  
                 ),
             
                 const SizedBox(height: 25),
