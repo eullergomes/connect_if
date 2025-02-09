@@ -2,7 +2,9 @@ import 'package:connect_if/features/auth/data/firebase_auth_repo.dart';
 import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:connect_if/features/auth/presentation/cubits/auth_states.dart';
 import 'package:connect_if/features/auth/presentation/cubits/pages/auth_page.dart';
-import 'package:connect_if/features/post/presentation/pages/home_page.dart';
+import 'package:connect_if/features/home/presentation/pages/home_page.dart';
+import 'package:connect_if/features/profile/data/firebase_profile_repo.dart';
+import 'package:connect_if/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,18 +31,30 @@ class MyApp extends StatelessWidget {
   // auth repo
   final authRepo = FirebaseAuthRepo();
 
+  // profile repo
+  final profileRepo = FirebaseProfileRepo();
+
   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     // provide cubit to app
-    return BlocProvider(
-      create: (context) => AuthCubit(authRepo: authRepo)..checkAuth(),
-      child: MaterialApp(
+    return MultiBlocProvider(
+       providers: [
+        // auth cubit
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(authRepo: authRepo)..checkAuth(),
+        ),
+
+        // profile cubit
+        BlocProvider<ProfileCubit>(
+          create: (context) => ProfileCubit(profileRepo: profileRepo),
+        )
+       ], 
+       child: MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocConsumer<AuthCubit, AuthState>(
         builder: (context, authState) {
-          print(authState);
           // unauthenticated -> auth page (login/register)
           if (authState is Unauthenticated) {
             return const AuthPage();
