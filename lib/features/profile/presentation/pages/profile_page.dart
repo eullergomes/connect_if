@@ -3,9 +3,12 @@ import 'package:connect_if/features/post/presentation/components/post_title.dart
 import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
 import 'package:connect_if/features/post/presentation/cubits/posts_states.dart';
 import 'package:connect_if/features/profile/presentation/components/bio_box.dart';
+import 'package:connect_if/features/profile/presentation/components/follow_button.dart';
+import 'package:connect_if/features/profile/presentation/components/profile_stats.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_states.dart';
 import 'package:connect_if/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:connect_if/features/profile/presentation/pages/follower_page.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,8 +43,49 @@ class _ProfilePageState extends State<ProfilePage> {
     profileCubit.fetchUserProfile(widget.uid);
   }
 
+  /*
+    FOLLOW / UNFOLLOW
+  */
+
+  void followButtonPressed() {
+    final profileState = profileCubit.state;
+    if (profileState is! ProfileLoaded) {
+      return;
+    }
+
+    final profileUser = profileState.profileUser;
+    final isFollwind = profileUser.followers.contains(currentUser!.uid);
+
+    // optimistically update UI
+    setState(() {
+      // unfollow
+      if (isFollwind) {
+        profileUser.followers.remove(currentUser!.uid);
+      } else {
+        // follow
+        profileUser.followers.add(currentUser!.uid);
+      }
+    });
+    
+    // perform actual toggle in cubit
+    profileCubit.toggleFollow(
+      currentUser!.uid,
+      widget.uid,
+    ).catchError((error) {
+      // unfollow
+      if (isFollwind) {
+        profileUser.followers.add(currentUser!.uid);
+      } else {
+        // follow
+        profileUser.followers.remove(currentUser!.uid);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // is own post
+    final isOwnPost = (widget.uid == currentUser!.uid);
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         // loaded
@@ -56,14 +100,15 @@ class _ProfilePageState extends State<ProfilePage> {
               foregroundColor: AppThemeCustom.gray400,
               actions: [
                 // edit profile
-                IconButton(
-                  onPressed: () => Navigator.push(
-                    context, 
-                    MaterialPageRoute(
-                      builder: (context) => EditProfilePage(user: user),
-                    )),
-                  icon: const Icon(Icons.edit),
-                )
+                if (isOwnPost)
+                  IconButton(
+                    onPressed: () => Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(user: user),
+                      )),
+                    icon: const Icon(Icons.edit),
+                  )
               ],
             ),
 
@@ -107,6 +152,28 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
             
                 const SizedBox(height: 25),
+
+                // profile stats
+                ProfileStats(
+                  postCount: postCount, 
+                  followersCount: user.followers.length,
+                  followingCount: user.following.length,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FollowerPage(
+                        followers: user.followers,
+                        following: user.following,
+                      )
+                    ),
+                  ),
+                ),
+                // follow button
+                if (!isOwnPost)
+                  FollowButton(
+                    onPressed: followButtonPressed, 
+                    isFollowing: user.followers.contains(currentUser!.uid),
+                  ),
             
                 // bio box
                 Padding(

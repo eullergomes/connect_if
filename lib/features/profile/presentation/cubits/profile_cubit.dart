@@ -89,4 +89,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError("Erro ao atualizar perfil: $e"));
     }
   }
+
+  Future<void> toggleFollow(String currentUid, String targetUid) async {
+    try {
+      await profileRepo.toggleFollow(currentUid, targetUid);
+
+    } catch (e) {
+      emit(ProfileError("Erro ao seguir usuário: $e"));
+    }
+  }
 }
