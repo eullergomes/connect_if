@@ -3,6 +3,8 @@ import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:connect_if/features/auth/presentation/cubits/auth_states.dart';
 import 'package:connect_if/features/auth/presentation/cubits/pages/auth_page.dart';
 import 'package:connect_if/features/home/presentation/pages/home_page.dart';
+import 'package:connect_if/features/post/data/firebase_post_repos.dart';
+import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
 import 'package:connect_if/features/profile/data/firebase_profile_repo.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:connect_if/features/storage/data/firebase_storage_repo.dart';
@@ -38,6 +40,9 @@ class MyApp extends StatelessWidget {
   // storage repo
   final firebaseStorageRepo = FirebaseStorageRepo();
 
+  // post repo
+  final firebasePostRepos = FirebasePostRepos();
+
   MyApp({super.key});
 
   @override
@@ -56,8 +61,16 @@ class MyApp extends StatelessWidget {
             profileRepo: firebaseProfileRepo,
             storageRepo: firebaseStorageRepo,
           ),
-        )
-       ], 
+        ),
+
+        // post cubit
+        BlocProvider<PostCubit>(
+          create: (context) => PostCubit(
+            postRepo: firebasePostRepos,
+            storageRepo: firebaseStorageRepo,
+          ),
+        ),
+       ],
        child: MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocConsumer<AuthCubit, AuthState>(

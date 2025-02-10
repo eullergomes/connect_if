@@ -1,4 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connect_if/features/post/presentation/components/post_title.dart';
+import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
+import 'package:connect_if/features/post/presentation/cubits/posts_states.dart';
 import 'package:connect_if/features/profile/presentation/components/bio_box.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_states.dart';
@@ -25,6 +28,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // current user
   late AppUser? currentUser = authCubit.currentUser;
+
+  // posts
+  int postCount = 0;
 
   // on startup
   @override
@@ -56,13 +62,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     MaterialPageRoute(
                       builder: (context) => EditProfilePage(user: user),
                     )),
-                  icon: const Icon(Icons.settings),
+                  icon: const Icon(Icons.edit),
                 )
               ],
             ),
 
             // BODY
-            body: Column(
+            body: ListView(
               children: [
                 // email
                 Center(
@@ -131,6 +137,50 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
+                
+                const SizedBox(height: 10),
+
+                // list of posts from this user
+                BlocBuilder<PostCubit, PostStates>(
+                  builder: (context, state) {
+                    // posts loaded
+                    if (state is PostsLoaded) {
+                      // filter posts by user id
+                      final userPosts = state.posts
+                        .where((post) => post.userId == widget.uid)
+                        .toList();
+                      
+                      postCount = userPosts.length;
+
+                      return ListView.builder(
+                        itemCount: postCount,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          // get individual post
+                          final post = userPosts[index];
+
+                          // return as post title UI
+                          return PostTitle(
+                            post: post, 
+                            onDeletePressed: () => 
+                              context.read<PostCubit>().deletePost(post.id),  
+                          );
+                        }
+                      );
+                    }
+
+                    // posts loading...
+                    else if (state is PostsLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return const Center(
+                        child: Text('Nenhum post encontrado'),
+                      );
+                    }
+                  })
               ],
             )
           );
