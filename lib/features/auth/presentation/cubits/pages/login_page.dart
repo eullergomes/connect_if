@@ -67,17 +67,16 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // logo
-                Icon(
-                  Icons.lock_open_rounded,
-                  size: 80,
-                  color: AppThemeCustom.gray400,
+                Image.asset(
+                  'assets/images/logo.png',
+                  height: 80,
                 ),
             
                 const SizedBox(height: 50),
             
                 // wekcome message
                 Text(
-                  "Bem vndo de volta! Sentimos sua falta",
+                  "Bem vindo de volta! Sentimos sua falta",
                   style: TextStyle(
                     color: AppThemeCustom.black,
                     fontSize: 20
@@ -116,14 +115,14 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text(
                       "Não tem uma conta?",
-                      style: TextStyle(color: AppThemeCustom.blue400),
+                      style: TextStyle(color: AppThemeCustom.gray900),
                     ),
                     GestureDetector(
                       onTap: widget.togglePages,
                       child: Text(
-                        "Registre-se agora",
+                        " Registre-se agora",
                         style: TextStyle(
-                          color: AppThemeCustom.blue600,
+                          color: AppThemeCustom.gray900,
                           fontWeight: FontWeight.bold,  
                         ),
                       ),

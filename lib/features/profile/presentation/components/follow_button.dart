@@ -26,7 +26,7 @@ class FollowButton extends StatelessWidget {
         child: MaterialButton(
           onPressed: onPressed,
           padding: const EdgeInsets.all(25),
-          color: isFollowing ? AppThemeCustom.green500 : AppThemeCustom.blue500,
+          color: isFollowing ? AppThemeCustom.gray400 : AppThemeCustom.green500,
           child: Text(
             isFollowing ? "Deixar de seguir" : "Seguir",
             style: TextStyle(

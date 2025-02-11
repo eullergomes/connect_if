@@ -151,23 +151,30 @@ class _UploadPostPageState extends State<UploadPostPage> {
       body: Center(
         child: Column(
           children: [
-            // image preview for web
-            if (kIsWeb && imagePickedFile != null)
-              Image.file(File(imagePickedFile!.path!)),
+        // image preview for web
+        if (kIsWeb && imagePickedFile != null)
+          Image.file(File(imagePickedFile!.path!)),
 
-            // pick image button
-            MaterialButton(
-              onPressed: pickImage,
-              color: AppThemeCustom.green500,
-              child: const Text("Escolher imagem"),
-            ),
+        const SizedBox(height: 20),
 
-            // caption text box
-            MyTextField(
-              controller: textController, 
-              hintText: "Título", 
-              obscureText: false,
-            )
+        // pick image button
+        MaterialButton(
+          onPressed: pickImage,
+          color: AppThemeCustom.green500,
+          child: const Text("Escolher imagem", style: TextStyle(color: AppThemeCustom.black)),
+        ),
+
+        const SizedBox(height: 20),
+
+        // caption text box
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: MyTextField(
+          controller: textController, 
+          hintText: "Descrição", 
+          obscureText: false,
+          ),
+        )
           ],
         ),
       ),

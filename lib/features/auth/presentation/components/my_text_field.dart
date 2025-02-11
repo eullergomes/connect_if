@@ -31,16 +31,16 @@ class MyTextField extends StatelessWidget {
         // border when selected
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: AppThemeCustom.green400,
+            color: AppThemeCustom.green500,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
 
         hintText: hintText,
         hintStyle: TextStyle(
-          color: AppThemeCustom.gray400,
+          color: AppThemeCustom.black,
         ),
-        fillColor: AppThemeCustom.gray100,
+        // fillColor: AppThemeCustom.black,
         filled: true,
       ),
     );

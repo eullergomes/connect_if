@@ -15,7 +15,7 @@ class BioBox extends StatelessWidget {
       padding: const EdgeInsets.all(25),
 
       decoration: BoxDecoration(
-        color: AppThemeCustom.gray400,
+        color: AppThemeCustom.gray100,
       ),
 
       width: double.infinity,
@@ -23,7 +23,7 @@ class BioBox extends StatelessWidget {
       child: Text(
         text.isNotEmpty ? text : 'Sem bio...',
         style: TextStyle(
-          color: AppThemeCustom.green100,
+          color: AppThemeCustom.gray500,
         ),
       ),
     );

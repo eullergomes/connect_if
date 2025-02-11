@@ -7,6 +7,8 @@ import 'package:connect_if/features/post/data/firebase_post_repos.dart';
 import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
 import 'package:connect_if/features/profile/data/firebase_profile_repo.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_cubit.dart';
+import 'package:connect_if/features/search/data/firebase_search_repo.dart';
+import 'package:connect_if/features/search/presentation/cubits/search_cubit.dart';
 import 'package:connect_if/features/storage/data/firebase_storage_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +45,9 @@ class MyApp extends StatelessWidget {
   // post repo
   final firebasePostRepos = FirebasePostRepos();
 
+  // search repo
+  final firebaseSearchRepo = FirebaseSearchRepo();
+
   MyApp({super.key});
 
   @override
@@ -68,6 +73,13 @@ class MyApp extends StatelessWidget {
           create: (context) => PostCubit(
             postRepo: firebasePostRepos,
             storageRepo: firebaseStorageRepo,
+          ),
+        ),
+
+        // search cubit
+        BlocProvider<SearchCubit>(
+          create: (context) => SearchCubit(
+            searchRepo: firebaseSearchRepo,
           ),
         ),
        ],

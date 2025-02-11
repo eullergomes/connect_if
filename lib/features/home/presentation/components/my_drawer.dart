@@ -2,6 +2,7 @@ import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:connect_if/features/home/presentation/components/my_drawer_title.dart';
 import 'package:connect_if/features/home/presentation/pages/home_page.dart';
 import 'package:connect_if/features/profile/presentation/pages/profile_page.dart';
+import 'package:connect_if/features/search/pages/search_page.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,8 +72,13 @@ class MyDrawer extends StatelessWidget {
               // search title
               MyDrawerTitle(
                 title: "Buscar", 
-                icon: Icons.search, 
-                onTap: () {},
+                icon: Icons.search,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SearchPage(),
+                  ),
+                ),
               ),
 
               // settings title

@@ -66,12 +66,14 @@ class _ProfilePageState extends State<ProfilePage> {
         profileUser.followers.add(currentUser!.uid);
       }
     });
-    
+
     // perform actual toggle in cubit
-    profileCubit.toggleFollow(
+    profileCubit
+        .toggleFollow(
       currentUser!.uid,
       widget.uid,
-    ).catchError((error) {
+    )
+        .catchError((error) {
       // unfollow
       if (isFollwind) {
         profileUser.followers.add(currentUser!.uid);
@@ -94,147 +96,153 @@ class _ProfilePageState extends State<ProfilePage> {
           final user = state.profileUser;
 
           return Scaffold(
-            // APP BAR
-            appBar: AppBar(
-              title: Text(user.name),
-              foregroundColor: AppThemeCustom.gray400,
-              actions: [
-                // edit profile
-                if (isOwnPost)
-                  IconButton(
-                    onPressed: () => Navigator.push(
-                      context, 
+              // APP BAR
+              appBar: AppBar(
+                title: Text(user.name),
+                foregroundColor: AppThemeCustom.black,
+                actions: [
+                  // edit profile
+                  if (isOwnPost)
+                    IconButton(
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfilePage(user: user),
+                          )),
+                      icon: const Icon(Icons.edit),
+                    )
+                ],
+              ),
+
+              // BODY
+              body: ListView(
+                children: [
+                  // email
+                  Center(
+                    child: Text(
+                      user.email,
+                      style: TextStyle(color: AppThemeCustom.black),
+                    ),
+                  ),
+
+                  // profile pic
+                  const SizedBox(height: 20),
+                  CachedNetworkImage(
+                    imageUrl: user.profileImageUrl,
+                    // loading
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+
+                    // error -> failed to load
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.person,
+                      size: 72,
+                      color: AppThemeCustom.black,
+                    ),
+
+                    // loaded
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: 120,
+                      width: 120,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit
+                                .contain, // Changed from BoxFit.cover to BoxFit.contain
+                          )),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // profile stats
+                  ProfileStats(
+                    postCount: postCount,
+                    followersCount: user.followers.length,
+                    followingCount: user.following.length,
+                    onTap: () => Navigator.push(
+                      context,
                       MaterialPageRoute(
-                        builder: (context) => EditProfilePage(user: user),
-                      )),
-                    icon: const Icon(Icons.edit),
-                  )
-              ],
-            ),
-
-            // BODY
-            body: ListView(
-              children: [
-                // email
-                Center(
-                  child: Text(
-                    user.email,
-                    style: TextStyle(color: AppThemeCustom.gray400),
-                  ),
-                ),
-            
-                // profile pic
-                CachedNetworkImage(
-                  imageUrl: user.profileImageUrl,
-                  // loading
-                  placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-
-                  // error -> failed to load
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.person,
-                    size: 72,
-                    color: AppThemeCustom.gray800,
-                  ),
-
-                  // loaded
-                  imageBuilder: (context, imageProvider) => Container(
-                    height: 120,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      )
-                    ),
-                  ),  
-                ),
-            
-                const SizedBox(height: 25),
-
-                // profile stats
-                ProfileStats(
-                  postCount: postCount, 
-                  followersCount: user.followers.length,
-                  followingCount: user.following.length,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FollowerPage(
-                        followers: user.followers,
-                        following: user.following,
-                      )
+                          builder: (context) => FollowerPage(
+                                followers: user.followers,
+                                following: user.following,
+                              )),
                     ),
                   ),
-                ),
-                // follow button
-                if (!isOwnPost)
-                  FollowButton(
-                    onPressed: followButtonPressed, 
-                    isFollowing: user.followers.contains(currentUser!.uid),
-                  ),
-            
-                // bio box
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Bio",
-                        style: TextStyle(color: AppThemeCustom.gray400),
-                      )
-                    ],
-                  ),
-                ),
+                  // follow button
+                    if (!isOwnPost)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: FollowButton(
+                      onPressed: followButtonPressed,
+                      isFollowing: user.followers.contains(currentUser!.uid),
+                      ),
+                    ),
 
-                const SizedBox(height: 10),
-            
-                BioBox(text: user.bio),
-
-                // posts
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0, top: 25),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Posts",
-                        style: TextStyle(color: AppThemeCustom.gray400),
-                      )
-                    ],
+                  // bio box
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25.0, top: 25.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Bio",
+                          style: TextStyle(
+                            color: AppThemeCustom.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                
-                const SizedBox(height: 10),
 
-                // list of posts from this user
-                BlocBuilder<PostCubit, PostStates>(
-                  builder: (context, state) {
+                  const SizedBox(height: 10),
+
+                  BioBox(text: user.bio),
+
+                  // posts
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25.0, top: 25),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Posts",
+                          style: TextStyle(
+                              color: AppThemeCustom.black,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // list of posts from this user
+                  BlocBuilder<PostCubit, PostStates>(builder: (context, state) {
                     // posts loaded
                     if (state is PostsLoaded) {
                       // filter posts by user id
                       final userPosts = state.posts
-                        .where((post) => post.userId == widget.uid)
-                        .toList();
-                      
+                          .where((post) => post.userId == widget.uid)
+                          .toList();
+
                       postCount = userPosts.length;
 
                       return ListView.builder(
-                        itemCount: postCount,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          // get individual post
-                          final post = userPosts[index];
+                          itemCount: postCount,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            // get individual post
+                            final post = userPosts[index];
 
-                          // return as post title UI
-                          return PostTitle(
-                            post: post, 
-                            onDeletePressed: () => 
-                              context.read<PostCubit>().deletePost(post.id),  
-                          );
-                        }
-                      );
+                            // return as post title UI
+                            return PostTitle(
+                              post: post,
+                              onDeletePressed: () =>
+                                  context.read<PostCubit>().deletePost(post.id),
+                            );
+                          });
                     }
 
                     // posts loading...
@@ -248,9 +256,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     }
                   })
-              ],
-            )
-          );
+                ],
+              ));
         }
 
         // loading...

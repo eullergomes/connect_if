@@ -38,12 +38,15 @@ class _CommentTitleState extends State<CommentTitle> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Deletar postagem?'),
+        title: const Text('Apagar postagem?'),
         actions: [
           // cancel button
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(color: AppThemeCustom.black),
+            ),
           ),
 
           // delete button
@@ -54,7 +57,10 @@ class _CommentTitleState extends State<CommentTitle> {
                 .deleteComment(widget.comment.postId, widget.comment.id);
               Navigator.pop(context);
             },
-            child: const Text('Deletar'),
+            child: const Text(
+              'Apagar',
+              style: TextStyle(color: AppThemeCustom.black),
+            ),
           ),
         ],
       )
@@ -62,35 +68,39 @@ class _CommentTitleState extends State<CommentTitle> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Row(
-        children: [
-          // name
-          Text(
-            widget.comment.userName,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+Widget build(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    child: Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 10, // Espaço entre os elementos
+      children: [
+        // Nome do usuário
+        Text(
+          widget.comment.userName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+
+        // Texto do comentário (quebra automática)
+        Flexible(
+          child: Text(
+            widget.comment.text,
+            softWrap: true,
           ),
+        ),
 
-          const SizedBox(width: 10),
+        // Botão de deletar (se for o autor)
+        if (isDownPost)
+          GestureDetector(
+            onTap: showOptions,
+            child: Icon(
+              Icons.more_horiz,
+              color: AppThemeCustom.gray400,
+            ),
+          ),
+      ],
+    ),
+  );
+}
 
-          // coment text
-          Text(widget.comment.text),
-
-          const Spacer(),
-
-          // delete button
-          if (isDownPost)
-            GestureDetector(
-              onTap: showOptions,
-              child: Icon(
-                Icons.more_horiz,
-                color: AppThemeCustom.green400,
-              ),
-            )
-        ],
-      ),
-    );
-  }
 }

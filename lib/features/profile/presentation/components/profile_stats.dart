@@ -35,41 +35,45 @@ class ProfileStats extends StatelessWidget {
       color: AppThemeCustom.black
     );
     return GestureDetector(
+      onTap: onTap,
+      child: Center(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // posts
-          SizedBox(
-            width: 100,
-            child: Column(
-              children: [
-                Text(postCount.toString(), style: textStyleForCount,),
-                Text("Postagens", style: textStyleForText,),
-              ],
-            ),
+        // posts
+        SizedBox(
+          width: 100,
+          child: Column(
+          children: [
+            Text(postCount.toString(), style: textStyleForCount,),
+            Text("Postagens", style: textStyleForText,),
+          ],
           ),
+        ),
       
-          // followers
-          SizedBox(
-            width: 100,
-            child: Column(
-              children: [
-                Text(followersCount.toString(), style: textStyleForCount,),
-                Text("Seguindo", style: textStyleForText,),
-              ],
-            ),
+        // followers
+        SizedBox(
+          width: 100,
+          child: Column(
+          children: [
+            Text(followersCount.toString(), style: textStyleForCount,),
+            Text("Seguindo", style: textStyleForText,),
+          ],
           ),
+        ),
       
-          // seguidores
-          SizedBox(
-            width: 100,
-            child: Column(
-              children: [
-                Text(followingCount.toString(), style: textStyleForCount,),
-                Text("Seguidores", style: textStyleForText,),
-              ],
-            ),
-          )
+        // seguidores
+        SizedBox(
+          width: 100,
+          child: Column(
+          children: [
+            Text(followingCount.toString(), style: textStyleForCount,),
+            Text("Seguidores", style: textStyleForText,),
+          ],
+          ),
+        )
         ],
+      ),
       ),
     );
   }

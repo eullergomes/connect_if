@@ -77,10 +77,9 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // logo
-                Icon(
-                  Icons.lock_open_rounded,
-                  size: 80,
-                  color: AppThemeCustom.gray400,
+                Image.asset(
+                  'assets/images/logo.png',
+                  height: 80,
                 ),
             
                 const SizedBox(height: 50),
@@ -142,14 +141,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     Text(
                       "Já tem uma conta?",
-                      style: TextStyle(color: AppThemeCustom.blue400),
+                      style: TextStyle(color: AppThemeCustom.gray900),
                     ),
                     GestureDetector(
                       onTap: widget.togglePages,
                       child: Text(
-                        "Entre agora",
+                        " Entre agora",
                         style: TextStyle(
-                          color: AppThemeCustom.blue600,
+                          color: AppThemeCustom.gray900,
                           fontWeight: FontWeight.bold,  
                         ),
                       ),

@@ -117,7 +117,7 @@ class _PostTitleState extends State<PostTitle> {
           // cancel button
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
+            child: const Text('Cancelar', style: TextStyle(color: AppThemeCustom.black)),
           ),
 
           // save button
@@ -126,7 +126,7 @@ class _PostTitleState extends State<PostTitle> {
               addComment();
               Navigator.of(context).pop();
             },
-            child: const Text('Comentar'),
+            child: const Text('Comentar', style: TextStyle(color: AppThemeCustom.black)),
           ),
         ]
       )
@@ -185,7 +185,7 @@ class _PostTitleState extends State<PostTitle> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppThemeCustom.gray100,
+      color: AppThemeCustom.white,
       child: Column(
         children: [
           // Top section: profile pic / name / delete button
@@ -244,6 +244,23 @@ class _PostTitleState extends State<PostTitle> {
                     ),
                 ],
               ),
+            ),
+          ),
+
+          // CAPTION
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+            child: Row(
+              children: [
+                // username
+                Text(
+                  widget.post.text,
+                  style: TextStyle(
+                    color: AppThemeCustom.black,
+                    fontSize: 18,
+                  ),
+                )
+              ],
             ),
           ),
       
@@ -317,23 +334,6 @@ class _PostTitleState extends State<PostTitle> {
             
           ),
 
-          // CAPTION
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-            child: Row(
-              children: [
-                // username
-                Text(
-                  widget.post.userName,
-                  style: TextStyle(
-                    color: AppThemeCustom.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ),
-          ),
-
           // COMMENT SECTION
           BlocBuilder<PostCubit, PostStates>(
             builder: (context, state) {
@@ -349,17 +349,17 @@ class _PostTitleState extends State<PostTitle> {
                     
                     // comment section
                     return ListView.builder(
-                    itemCount: showCommentCount,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      // get individual comment
-                      final comment = post.comments[index];
+                      itemCount: showCommentCount,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        // get individual comment
+                        final comment = post.comments[index];
 
-                      // comment title UI
-                      return CommentTitle(comment: comment);
-                    },
-                  );
+                        // comment title UI
+                        return CommentTitle(comment: comment);
+                      },
+                    );
                   }
               }
 

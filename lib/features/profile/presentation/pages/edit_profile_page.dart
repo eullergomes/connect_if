@@ -109,8 +109,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget buildEditPage() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Editar  perfil"),
-        foregroundColor: AppThemeCustom.gray400,
+        title: const Text("Editar perfil"),
+        foregroundColor: AppThemeCustom.black,
         actions: [
           // save button
           IconButton(
@@ -171,7 +171,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           Center(
             child: MaterialButton(
               onPressed: pickImage,
-              color: AppThemeCustom.blue600,
+              color: AppThemeCustom.green500,
               child: const Text("Escolher imagem"),
             )
           ),
