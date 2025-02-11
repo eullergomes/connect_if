@@ -56,84 +56,92 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // logo
-                Image.asset(
-                  'assets/images/logo.png',
-                  height: 80,
-                ),
-            
-                const SizedBox(height: 50),
-            
-                // wekcome message
-                Text(
-                  "Bem vindo de volta! Sentimos sua falta",
-                  style: TextStyle(
-                    color: AppThemeCustom.black,
-                    fontSize: 20
+Widget build(BuildContext context) {
+  return Scaffold(
+    resizeToAvoidBottomInset: false, // Impede que o teclado empurre os widgets
+    body: SafeArea(
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Logo
+                  Image.asset(
+                    'assets/images/logo.png',
+                    height: 80,
                   ),
-                ),
-            
-                const SizedBox(height: 25),
-                // email textfield
-                MyTextField(
-                  controller: emailController, 
-                  hintText: "Email",	
-                  obscureText: false
-                ),
-                const SizedBox(height: 10),
-            
-                // password textfield
-                MyTextField(
-                  controller: passwordController, 
-                  hintText: "Senha",	
-                  obscureText: true
-                ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 50),
 
-                // login button
-                MyButton(
-                  onTap: login,
-                  text: "Entrar",
-                ),
-
-                const SizedBox(height: 50),
-
-                // register button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Não tem uma conta?",
-                      style: TextStyle(color: AppThemeCustom.gray900),
+                  // Welcome message
+                  Text(
+                    "Bem vindo de volta! Sentimos sua falta",
+                    style: TextStyle(
+                      color: AppThemeCustom.black,
+                      fontSize: 20,
                     ),
-                    GestureDetector(
-                      onTap: widget.togglePages,
-                      child: Text(
-                        " Registre-se agora",
-                        style: TextStyle(
-                          color: AppThemeCustom.gray900,
-                          fontWeight: FontWeight.bold,  
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // Email textfield
+                  MyTextField(
+                    controller: emailController,
+                    hintText: "Email",
+                    obscureText: false,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Password textfield
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: "Senha",
+                    obscureText: true,
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // Login button
+                  MyButton(
+                    onTap: login,
+                    text: "Entrar",
+                  ),
+
+                  const SizedBox(height: 50),
+
+                  // Register button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Não tem uma conta?",
+                        style: TextStyle(color: AppThemeCustom.gray900),
+                      ),
+                      GestureDetector(
+                        onTap: widget.togglePages,
+                        child: Text(
+                          " Registre-se agora",
+                          style: TextStyle(
+                            color: AppThemeCustom.gray900,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ) 
-        )
-      )
-    );
-  }
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 }
