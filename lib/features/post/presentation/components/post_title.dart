@@ -250,20 +250,17 @@ class _PostTitleState extends State<PostTitle> {
           // CAPTION
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-            child: Row(
-              children: [
-                // username
-                Text(
-                  widget.post.text,
-                  style: TextStyle(
-                    color: AppThemeCustom.black,
-                    fontSize: 18,
-                  ),
-                )
-              ],
+            child: Text(
+              widget.post.text,
+              style: TextStyle(
+                color: AppThemeCustom.black,
+                fontSize: 18,
+              ),
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
           ),
-      
+
           // image
           CachedNetworkImage(
             imageUrl: widget.post.imageUrl,

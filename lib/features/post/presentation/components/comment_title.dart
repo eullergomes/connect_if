@@ -38,7 +38,7 @@ class _CommentTitleState extends State<CommentTitle> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Apagar postagem?'),
+        title: const Text('Apagar comentário?'),
         actions: [
           // cancel button
           TextButton(
