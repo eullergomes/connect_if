@@ -97,7 +97,7 @@ class _PostTitleState extends State<PostTitle> {
   }
 
   /*
-  COMMETNS 
+  COMMENTS 
   */
 
   // comment text controller
@@ -188,73 +188,101 @@ class _PostTitleState extends State<PostTitle> {
       color: AppThemeCustom.white,
       child: Column(
         children: [
-          // Top section: profile pic / name / delete button
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfilePage(
-                  uid: widget.post.userId,  
-                ),
+          // Top section: profile pic / name / menu button
+Padding(
+  padding: const EdgeInsets.all(12.0),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      // Esquerda: imagem + nome
+      GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfilePage(
+              uid: widget.post.userId,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            // profile pic
+            postUser?.profileImageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: postUser!.profileImageUrl,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.person),
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  )
+                : const Icon(Icons.person),
+
+            const SizedBox(width: 10),
+
+            // name
+            Text(
+              widget.post.userName,
+              style: TextStyle(
+                color: AppThemeCustom.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // profile pic
-                  postUser?.profileImageUrl != null
-                    ? CachedNetworkImage(
-                      imageUrl: postUser!.profileImageUrl,
-                      errorWidget: (context, url, error) => 
-                        const Icon(Icons.person),
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),)
-                    : const Icon(Icons.person),
-            
-                  const SizedBox(width: 10),
-              
-                  // name
-                  Text(
-                    widget.post.userName,
-                    style: TextStyle(
-                      color: AppThemeCustom.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+          ],
                   ),
-              
-                  const Spacer(),
-                    
-                  // delete button
-                  if (isDownPost)
+                ),
+
+                // Actions Button
+                Row(
+                  children: [
+                    if (isDownPost)
+                      GestureDetector(
+                        onTap: showOptions,
+                        child: Icon(
+                          Icons.delete,
+                          color: AppThemeCustom.black,
+                        ),
+                      ),
+                    const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: showOptions,
-                      child: Icon(Icons.delete,
-                        color: AppThemeCustom.black),
+                      onTap: () {
+                        // Ação do menu "mais opções"
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => const SizedBox(
+                            height: 100,
+                            child: Center(child: Text('Mais opções')),
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        Icons.more_vert,
+                        color: AppThemeCustom.black,
+                      ),
                     ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
           ),
 
           // CAPTION
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20),
             child: Text(
               widget.post.text,
               style: TextStyle(
                 color: AppThemeCustom.black,
-                fontSize: 18,
+                fontSize: 14,
               ),
               softWrap: true,
               overflow: TextOverflow.visible,
@@ -264,16 +292,16 @@ class _PostTitleState extends State<PostTitle> {
           // image
           CachedNetworkImage(
             imageUrl: widget.post.imageUrl,
-            height: 430,
+            height: 350,
             width: double.infinity,
             fit: BoxFit.cover,
-            placeholder: (context, url) => const SizedBox(height: 430),
+            placeholder: (context, url) => const SizedBox(height: 350),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
 
           // buttons -> like, comment, timestamp
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(5.0),
             child: Row(
               children: [
                 SizedBox(

@@ -1,106 +1,82 @@
-import 'package:connect_if/features/home/presentation/components/my_drawer.dart';
-import 'package:connect_if/features/post/presentation/components/post_title.dart';
-import 'package:connect_if/features/post/presentation/pages/upload_post_page.dart';
-import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
-import 'package:connect_if/features/post/presentation/cubits/posts_states.dart';
+import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:connect_if/features/home/presentation/pages/feed_screen.dart';
+import 'package:connect_if/features/profile/presentation/pages/profile_page.dart';
+import 'package:connect_if/features/search/pages/search_page.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  // post cubit
-  late final postCubit = context.read<PostCubit>();
+class HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+  late final String uid;
+  late final List<Widget> _screens;
 
-  // on startup
   @override
   void initState() {
     super.initState();
-    
-    // fetch all posts
-    fetcAllPosts();
+    final user = context.read<AuthCubit>().currentUser;
+    uid = user!.uid;
+    _screens = [
+      const FeedScreen(),
+      const SearchPage(),
+      const SearchPage(),
+      ProfilePage(uid: uid),
+    ];
   }
 
-  void fetcAllPosts() {
-    postCubit.fetchAllPosts();
-  }
+  final List<String> _titles = ['Feed', 'Conversas', 'Criar', 'Perfil'];
 
-  void deletePost(String postId) {
-    postCubit.deletePost(postId);
-    fetcAllPosts();
+  final List<String> _icons = [
+    'assets/images/feed_icon_black.svg',
+    'assets/images/conversations_icon.svg',
+    'assets/images/create_icon.svg',
+    'assets/images/profile_icon.svg',
+  ];
+
+  void _onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Início'),
-        foregroundColor: AppThemeCustom.black,
-        actions: [
-          // upload a new post
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const UploadPostPage(),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onTabTapped,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        items: List.generate(_titles.length, (index) {
+          return BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              _icons[index],
+              height: 24,
+              width: 24,
+              colorFilter: ColorFilter.mode(
+                _currentIndex == index
+                    ? AppThemeCustom.green400
+                    : AppThemeCustom.black,
+                BlendMode.srcIn,
               ),
             ),
-            icon: const Icon(Icons.add),
-          )
-        ],
-      ),
-
-      // DRAWER
-      drawer: const MyDrawer(),
-
-      // BODY
-      body: BlocBuilder<PostCubit, PostStates>(
-        builder: (context, state) {
-          // loading...
-          if (state is PostsLoading && state is PostUploading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } 
-          // loaded
-          else if (state is PostsLoaded) {
-            final allPosts = state.posts;
-
-            if (allPosts.isEmpty) {
-              return const Center(
-                child: Text('Nenhum post encontrado'),
-              );
-            }
-            
-            return ListView.builder(
-              itemCount: allPosts.length,
-              itemBuilder: (context, index) {
-                // get individual post
-                final post = allPosts[index];
-
-                // image
-                return PostTitle(
-                  post: post,
-                  onDeletePressed: () => deletePost(post.id),  
-                );
-              },
-            );
-          }
-          // error
-          else if (state is PostsError) {
-            return Center(
-              child: Text(state.message),
-            );
-          } else {
-            return const SizedBox();
-          }
-        },
+            label: _titles[index],
+          );
+        }),
+        selectedItemColor: AppThemeCustom.green400,
+        unselectedItemColor: AppThemeCustom.black,
+        type: BottomNavigationBarType.fixed,
+        selectedLabelStyle: const TextStyle(fontSize: 14),
+        unselectedLabelStyle: const TextStyle(fontSize: 14),
       ),
     );
   }
