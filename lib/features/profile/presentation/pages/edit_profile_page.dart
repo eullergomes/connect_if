@@ -126,7 +126,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             height: 200,
             width: 200,
             decoration: BoxDecoration(
-              color: AppThemeCustom.gray400,
+              color: AppThemeCustom.green100,
               shape: BoxShape.circle,
             ),
             clipBehavior: Clip.hardEdge,
@@ -176,8 +176,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
             )
           ),
 
-          // bio
-          const Text("Bio"),
+          const SizedBox(height: 30),
+
+            // bio
+            const Text(
+            "Bio",
+            style: TextStyle(fontSize: 18),
+            ),
 
           const SizedBox(height: 10),
 

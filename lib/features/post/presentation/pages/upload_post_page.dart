@@ -137,7 +137,7 @@ class _UploadPostPageState extends State<UploadPostPage> {
       // APP BAR
       appBar: AppBar(
         title: const Text("Criar post"),
-        foregroundColor: AppThemeCustom.blue800,
+        foregroundColor: AppThemeCustom.gray900,
         actions: [
           // upload button
           IconButton(

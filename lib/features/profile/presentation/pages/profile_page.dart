@@ -95,29 +95,39 @@ class _ProfilePageState extends State<ProfilePage> {
           // get loaded user
           final user = state.profileUser;
 
-          return Scaffold(
+            return Scaffold(
               // APP BAR
               appBar: AppBar(
-                title: Text(user.name),
-                foregroundColor: AppThemeCustom.black,
-                actions: [
-                  // edit profile
-                  if (isOwnPost)
-                    IconButton(
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfilePage(user: user),
-                          )),
-                      icon: const Icon(Icons.edit),
-                    )
-                ],
+              title: Text(user.name),
+              foregroundColor: AppThemeCustom.black,
+              actions: [
+              // edit profile
+              if (isOwnPost)
+              IconButton(
+                onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => EditProfilePage(user: user),
+                )),
+                icon: const Icon(Icons.edit),
+              ),
+              // logout
+              IconButton(
+              onPressed: () {
+                authCubit.logout();
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              icon: const Icon(Icons.logout),
+              ),
+              ],
               ),
 
               // BODY
-              body: ListView(
-                children: [
-                  // email
+              body: Padding(
+              padding: const EdgeInsets.only(top: 10.0), // Added spacing
+              child: ListView(
+              children: [
+                // email
                   Center(
                     child: Text(
                       user.email,
@@ -190,6 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(
                             color: AppThemeCustom.black,
                             fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         )
                       ],
@@ -200,20 +211,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   BioBox(text: user.bio),
 
-                  // posts
-                  Padding(
+                  const SizedBox(height: 10),
+
+                    // posts
+                    Padding(
                     padding: const EdgeInsets.only(left: 25.0, top: 25),
                     child: Row(
                       children: [
-                        Text(
-                          "Posts",
-                          style: TextStyle(
-                              color: AppThemeCustom.black,
-                              fontWeight: FontWeight.bold),
-                        )
+                      Text(
+                        "Posts",
+                        style: TextStyle(
+                          color: AppThemeCustom.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16), // Increased font size
+                      )
                       ],
                     ),
-                  ),
+                    ),
 
                   const SizedBox(height: 10),
 
@@ -257,7 +271,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     }
                   })
                 ],
-              ));
+              ))
+            );
         }
 
         // loading...

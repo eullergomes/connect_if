@@ -23,7 +23,7 @@ class MyTextField extends StatelessWidget {
         // border when unselected
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: AppThemeCustom.gray400,
+            color: AppThemeCustom.gray300,
           ),
           borderRadius: BorderRadius.circular(12),
         ),
