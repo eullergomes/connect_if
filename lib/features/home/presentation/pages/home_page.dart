@@ -1,5 +1,7 @@
 import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:connect_if/features/chat/pages/conversations_screen.dart';
 import 'package:connect_if/features/home/presentation/pages/feed_screen.dart';
+import 'package:connect_if/features/post/presentation/pages/upload_post_page.dart';
 import 'package:connect_if/features/profile/presentation/pages/profile_page.dart';
 import 'package:connect_if/features/search/pages/search_page.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
@@ -26,8 +28,8 @@ class HomePageState extends State<HomePage> {
     uid = user!.uid;
     _screens = [
       const FeedScreen(),
-      const SearchPage(),
-      const SearchPage(),
+      const ChatScreen(),
+      const UploadPostPage(),
       ProfilePage(uid: uid),
     ];
   }
@@ -64,7 +66,7 @@ class HomePageState extends State<HomePage> {
               width: 24,
               colorFilter: ColorFilter.mode(
                 _currentIndex == index
-                    ? AppThemeCustom.green400
+                    ? AppThemeCustom.green500
                     : AppThemeCustom.black,
                 BlendMode.srcIn,
               ),
