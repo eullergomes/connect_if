@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connect_if/features/auth/presentation/components/my_text_field.dart';
+import 'package:connect_if/features/services/auth/presentation/components/my_text_field.dart';
 import 'package:connect_if/features/profile/domain/entities/profile_user.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:connect_if/features/profile/presentation/cubits/profile_states.dart';

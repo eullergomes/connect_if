@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
-import 'package:connect_if/features/auth/presentation/components/my_text_field.dart';
-import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/presentation/components/my_text_field.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit.dart';
 import 'package:connect_if/features/post/domain/entities/comment.dart';
 import 'package:connect_if/features/post/domain/entities/post.dart';
 import 'package:connect_if/features/post/presentation/components/comment_title.dart';

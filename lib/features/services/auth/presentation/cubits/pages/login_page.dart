@@ -1,53 +1,51 @@
-import 'package:connect_if/features/auth/presentation/components/my_button.dart';
-import 'package:connect_if/features/auth/presentation/components/my_text_field.dart';
-import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
-import 'package:connect_if/ui/themes/class_themes.dart';
+/*
+LOGIN PAGE
+
+On thi spage, an axisting user can login with their:
+- Email
+- Password
+
+----------------------------------------------------------------
+Once the user sucessfully logs in, they will be redirected to the home page.
+
+If user does not have an account, they can navigate to the register page. */
+
+import 'package:connect_if/features/services/auth/presentation/components/my_button.dart';
+import 'package:connect_if/features/services/auth/presentation/components/my_text_field.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RegisterPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   final void Function()? togglePages;
-  const RegisterPage({
+  const LoginPage({
     super.key,
     required this.togglePages,
   });
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final nameController = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
 
-  // register button pressed
-  void register() {
-    final String name = nameController.text;
+  // login button pressed
+  void login() {
     final String email = emailController.text;
     final String password = passwordController.text;
-    final String confirmPassword = confirmPasswordController.text;
 
     // auth cubit
     final authCubit = context.read<AuthCubit>();
 
-    // ensure fields are not empty
-    if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
-      // ensure passwords match
-      if (password == confirmPassword) {
-        authCubit.register(name, email, password);
-      }
-      // passwords do not match
-      else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("As senhas não coincidem"),
-          ),
-        );
-      }
+    // ensure that email and password are not empty
+    if (email.isNotEmpty && password.isNotEmpty) {
+      authCubit.login(email, password);
     }
-    // fields are empt -> display error
+
+    // displa error if some fields are empty
     else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -55,15 +53,6 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
   }
 
   @override
@@ -78,7 +67,7 @@ Widget build(BuildContext context) {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Mantém a altura mínima necessária
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   // Logo
                   Image.asset(
@@ -88,9 +77,9 @@ Widget build(BuildContext context) {
 
                   const SizedBox(height: 50),
 
-                  // Create account message
+                  // Welcome message
                   Text(
-                    "Vamos criar uma conta para você",
+                    "Bem vindo de volta! Sentimos sua falta",
                     style: TextStyle(
                       color: AppThemeCustom.black,
                       fontSize: 20,
@@ -99,20 +88,13 @@ Widget build(BuildContext context) {
 
                   const SizedBox(height: 25),
 
-                  // Name textfield
-                  MyTextField(
-                    controller: nameController,
-                    hintText: "Nome",
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 10),
-
                   // Email textfield
                   MyTextField(
                     controller: emailController,
                     hintText: "Email",
                     obscureText: false,
                   ),
+
                   const SizedBox(height: 10),
 
                   // Password textfield
@@ -121,37 +103,29 @@ Widget build(BuildContext context) {
                     hintText: "Senha",
                     obscureText: true,
                   ),
-                  const SizedBox(height: 10),
-
-                  // Confirm password textfield
-                  MyTextField(
-                    controller: confirmPasswordController,
-                    hintText: "Confirmar senha",
-                    obscureText: true,
-                  ),
 
                   const SizedBox(height: 25),
 
-                  // Register button
+                  // Login button
                   MyButton(
-                    onTap: register,
-                    text: "Criar conta",
+                    onTap: login,
+                    text: "Entrar",
                   ),
 
                   const SizedBox(height: 50),
 
-                  // Already a member? Login now
+                  // Register button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Já tem uma conta?",
+                        "Não tem uma conta?",
                         style: TextStyle(color: AppThemeCustom.gray900),
                       ),
                       GestureDetector(
                         onTap: widget.togglePages,
                         child: Text(
-                          " Entre agora",
+                          " Registre-se agora",
                           style: TextStyle(
                             color: AppThemeCustom.gray900,
                             fontWeight: FontWeight.bold,

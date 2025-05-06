@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
-import 'package:connect_if/features/auth/domain/repository/auth_repo.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/domain/repository/auth_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthRepo  implements AuthRepo {

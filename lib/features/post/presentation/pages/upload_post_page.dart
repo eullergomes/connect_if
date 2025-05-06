@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:connect_if/features/auth/presentation/components/my_text_field.dart';
+import 'package:connect_if/features/services/auth/presentation/components/my_text_field.dart';
 import 'package:connect_if/features/post/domain/entities/post.dart';
 import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
 import 'package:connect_if/features/post/presentation/cubits/posts_states.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
-import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

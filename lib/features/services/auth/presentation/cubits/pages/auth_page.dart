@@ -2,8 +2,8 @@
 Auth Page - This Page determines whether to show the login or register page
  */
 
-import 'package:connect_if/features/auth/presentation/cubits/pages/login_page.dart';
-import 'package:connect_if/features/auth/presentation/cubits/pages/register_page.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/pages/login_page.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/pages/register_page.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {

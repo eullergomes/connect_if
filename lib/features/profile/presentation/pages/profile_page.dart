@@ -12,8 +12,8 @@ import 'package:connect_if/features/profile/presentation/pages/follower_page.dar
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
-import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;

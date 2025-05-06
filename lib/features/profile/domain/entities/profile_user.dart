@@ -1,4 +1,4 @@
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
 
 class ProfileUser extends AppUser {
   final String bio;

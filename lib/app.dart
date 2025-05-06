@@ -1,7 +1,7 @@
-import 'package:connect_if/features/auth/data/firebase_auth_repo.dart';
-import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
-import 'package:connect_if/features/auth/presentation/cubits/auth_states.dart';
-import 'package:connect_if/features/auth/presentation/cubits/pages/auth_page.dart';
+import 'package:connect_if/features/services/auth/data/firebase_auth_repo.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_states.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/pages/auth_page.dart';
 import 'package:connect_if/features/home/presentation/pages/home_page.dart';
 import 'package:connect_if/features/post/data/firebase_post_repos.dart';
 import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';

@@ -2,7 +2,7 @@
 Auth States
 */
 
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
 
 
 abstract class AuthState {}
