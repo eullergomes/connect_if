@@ -58,20 +58,18 @@ class ProfileCubit extends Cubit<ProfileState> {
       // profile picture update
       String? imageDownloadUrl;
 
-      if (imageDownloadUrl != null || imageMobilePath != null) {
+      if (imageMobilePath != null) {
         // for mobile
-        if (imageMobilePath != null) {
-          imageDownloadUrl = await storageRepo.uploadProfileImageMobile(imageMobilePath, uid);
-        } 
-        // for web
-        else if (imageWebBytes != null) {
-          imageDownloadUrl = await storageRepo.uploadProfileImageWeb(imageWebBytes, uid);
-        }
+        imageDownloadUrl = await storageRepo.uploadProfileImageMobile(imageMobilePath, uid);
+      } 
+      // for web
+      else if (imageWebBytes != null) {
+        imageDownloadUrl = await storageRepo.uploadProfileImageWeb(imageWebBytes, uid);
+      }
 
-        if (imageDownloadUrl == null) {
-          emit(ProfileError('Erro ao atualizar imagem de perfil'));
-          return;
-        }
+      if (imageDownloadUrl == null && (imageMobilePath != null || imageWebBytes != null)) {
+        emit(ProfileError('Erro ao atualizar imagem de perfil'));
+        return;
       }
 
       // update new profile

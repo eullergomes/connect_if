@@ -54,46 +54,48 @@ class FirebaseProfileRepo implements ProfileRepo{
   }
 
   @override
-  Future<void> toggleFollow(String currentUid, String targetUid) async {
-    try {
-      final currentUserDoc = 
+Future<void> toggleFollow(String currentUid, String targetUid) async {
+  try {
+    final currentUserDoc =
         await firestoreFirestore.collection('users').doc(currentUid).get();
-      
-      final targetUserDoc = 
+
+    final targetUserDoc =
         await firestoreFirestore.collection('users').doc(targetUid).get();
 
-      if (currentUserDoc.exists && targetUserDoc.exists) {
-        final currentUserData = currentUserDoc.data();
-        final targetUserData = targetUserDoc.data();
+    if (currentUserDoc.exists && targetUserDoc.exists) {
+      final currentUserData = currentUserDoc.data();
+      final targetUserData = targetUserDoc.data();
 
-        if (currentUserData != null && targetUserData != null) {
-          final List<String> currentFollowing = 
+      if (currentUserData != null && targetUserData != null) {
+        final List<String> currentFollowing =
             List<String>.from(currentUserData['following'] ?? []);
 
-          // check if the current user is already following the target user
-          if (currentFollowing.contains(targetUid)) {
-            // unfollow
-            await firestoreFirestore.collection('users').doc(currentUid).update({
-              'following': FieldValue.arrayRemove([targetUid]),
-            });
+        final bool isFollowing = currentFollowing.contains(targetUid);
 
-            await firestoreFirestore.collection('users').doc(targetUid).update({
-              'followers': FieldValue.arrayRemove([currentUid]),
-            });
-          } else {
-            // follow
-            await firestoreFirestore.collection('users').doc(currentUid).update({
-              'following': FieldValue.arrayUnion([targetUid]),
-            });
+        if (isFollowing) {
+          // unfollow
+          await firestoreFirestore.collection('users').doc(currentUid).update({
+            'following': FieldValue.arrayRemove([targetUid]),
+          });
 
-            await firestoreFirestore.collection('users').doc(targetUid).update({
-              'followers': FieldValue.arrayRemove([targetUid]),
-            });
-          }
+          await firestoreFirestore.collection('users').doc(targetUid).update({
+            'followers': FieldValue.arrayRemove([currentUid]),
+          });
+        } else {
+          // follow
+          await firestoreFirestore.collection('users').doc(currentUid).update({
+            'following': FieldValue.arrayUnion([targetUid]),
+          });
+
+          await firestoreFirestore.collection('users').doc(targetUid).update({
+            'followers': FieldValue.arrayUnion([currentUid]), // ✅ CORRETO
+          });
         }
       }
-    } catch (e) {
-      throw Exception(e);
     }
+  } catch (e) {
+    throw Exception(e);
   }
+}
+
 }
