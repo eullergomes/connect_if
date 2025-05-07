@@ -56,7 +56,7 @@ class ProfileStats extends StatelessWidget {
           width: 100,
           child: Column(
           children: [
-            Text(followersCount.toString(), style: textStyleForCount,),
+            Text(followingCount.toString(), style: textStyleForCount,),
             Text("Seguindo", style: textStyleForText,),
           ],
           ),
@@ -67,7 +67,7 @@ class ProfileStats extends StatelessWidget {
           width: 100,
           child: Column(
           children: [
-            Text(followingCount.toString(), style: textStyleForCount,),
+            Text(followersCount.toString(), style: textStyleForCount,),
             Text("Seguidores", style: textStyleForText,),
           ],
           ),

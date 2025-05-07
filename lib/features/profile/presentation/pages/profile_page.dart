@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connect_if/features/post/presentation/components/post_title.dart';
 import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
 import 'package:connect_if/features/post/presentation/cubits/posts_states.dart';
+import 'package:connect_if/features/post/domain/entities/post.dart';
 import 'package:connect_if/features/profile/presentation/components/bio_box.dart';
 import 'package:connect_if/features/profile/presentation/components/follow_button.dart';
 import 'package:connect_if/features/profile/presentation/components/profile_stats.dart';
@@ -86,210 +87,178 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // is own post
-    final isOwnPost = (widget.uid == currentUser!.uid);
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        // loaded
-        if (state is ProfileLoaded) {
-          // get loaded user
-          final user = state.profileUser;
+  final isOwnPost = (widget.uid == currentUser!.uid);
 
-            return Scaffold(
-              // APP BAR
-              appBar: AppBar(
-              title: Text(user.name),
-              foregroundColor: AppThemeCustom.black,
-              actions: [
-              // edit profile
+  return BlocBuilder<ProfileCubit, ProfileState>(
+    builder: (context, state) {
+      if (state is ProfileLoaded) {
+        final user = state.profileUser;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(user.name),
+            foregroundColor: AppThemeCustom.black,
+            actions: [
               if (isOwnPost)
-              IconButton(
-                onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                builder: (context) => EditProfilePage(user: user),
-                )),
-                icon: const Icon(Icons.edit),
-              ),
-              // logout
-              IconButton(
-              onPressed: () {
-                authCubit.logout();
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
-              icon: const Icon(Icons.logout),
-              ),
-              ],
-              ),
-
-              // BODY
-              body: Padding(
-              padding: const EdgeInsets.only(top: 10.0), // Added spacing
-              child: ListView(
-              children: [
-                // email
-                  Center(
-                    child: Text(
-                      user.email,
-                      style: TextStyle(color: AppThemeCustom.black),
+                IconButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfilePage(user: user),
                     ),
                   ),
+                  icon: const Icon(Icons.edit),
+                ),
+              IconButton(
+                onPressed: () {
+                  authCubit.logout();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+                icon: const Icon(Icons.logout),
+              ),
+            ],
+          ),
+          body: BlocBuilder<PostCubit, PostStates>(
+            builder: (context, postState) {
+              List<Post> userPosts = [];
+              if (postState is PostsLoaded) {
+                userPosts = postState.posts
+                    .where((post) => post.userId == widget.uid)
+                    .toList();
+              }
 
-                  // profile pic
-                  const SizedBox(height: 20),
-                  CachedNetworkImage(
-                    imageUrl: user.profileImageUrl,
-                    // loading
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-
-                    // error -> failed to load
-                    errorWidget: (context, url, error) => Icon(
-                      Icons.person,
-                      size: 72,
-                      color: AppThemeCustom.black,
+              return Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: ListView(
+                  children: [
+                    Center(
+                      child: Text(
+                        user.email,
+                        style: TextStyle(color: AppThemeCustom.black),
+                      ),
                     ),
-
-                    // loaded
-                    imageBuilder: (context, imageProvider) => Container(
-                      height: 120,
-                      width: 120,
-                      decoration: BoxDecoration(
+                    const SizedBox(height: 20),
+                    CachedNetworkImage(
+                      imageUrl: user.profileImageUrl,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.person,
+                        size: 72,
+                        color: AppThemeCustom.black,
+                      ),
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: imageProvider,
-                            fit: BoxFit
-                                .contain, // Changed from BoxFit.cover to BoxFit.contain
-                          )),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 25),
 
-                  const SizedBox(height: 25),
-
-                  // profile stats
-                  ProfileStats(
-                    postCount: postCount,
-                    followersCount: user.followers.length,
-                    followingCount: user.following.length,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
+                    // ✅ Usando userPosts.length
+                    ProfileStats(
+                      postCount: userPosts.length,
+                      followersCount: user.followers.length,
+                      followingCount: user.following.length,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
                           builder: (context) => FollowerPage(
-                                followers: user.followers,
-                                following: user.following,
-                              )),
-                    ),
-                  ),
-                  // follow button
-                    if (!isOwnPost)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: FollowButton(
-                      onPressed: followButtonPressed,
-                      isFollowing: user.followers.contains(currentUser!.uid),
+                            followers: user.followers,
+                            following: user.following,
+                          ),
+                        ),
                       ),
                     ),
 
-                  // bio box
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25.0, top: 25.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Bio",
-                          style: TextStyle(
-                            color: AppThemeCustom.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                    if (!isOwnPost)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: FollowButton(
+                          onPressed: followButtonPressed,
+                          isFollowing:
+                              user.followers.contains(currentUser!.uid),
+                        ),
+                      ),
 
-                  const SizedBox(height: 10),
-
-                  BioBox(text: user.bio),
-
-                  const SizedBox(height: 10),
-
-                    // posts
                     Padding(
-                    padding: const EdgeInsets.only(left: 25.0, top: 25),
-                    child: Row(
-                      children: [
-                      Text(
-                        "Posts",
-                        style: TextStyle(
-                          color: AppThemeCustom.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16), // Increased font size
+                      padding: const EdgeInsets.only(left: 25.0, top: 25.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Bio",
+                            style: TextStyle(
+                              color: AppThemeCustom.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    BioBox(text: user.bio),
+                    const SizedBox(height: 25),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Posts",
+                            style: TextStyle(
+                              color: AppThemeCustom.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    if (postState is PostsLoaded)
+                      ListView.builder(
+                        itemCount: userPosts.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          final post = userPosts[index];
+                          return PostTitle(
+                            post: post,
+                            onDeletePressed: () => context
+                                .read<PostCubit>()
+                                .deletePost(post.id),
+                          );
+                        },
                       )
-                      ],
-                    ),
-                    ),
+                    else if (postState is PostsLoading)
+                      const Center(child: CircularProgressIndicator())
+                    else
+                      const Center(child: Text('Nenhum post encontrado')),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      } else if (state is ProfileLoading) {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      } else {
+        return const Scaffold(
+          body: Center(child: Text('Perfil não encontrado')),
+        );
+      }
+    },
+  );
+}
 
-                  const SizedBox(height: 10),
-
-                  // list of posts from this user
-                  BlocBuilder<PostCubit, PostStates>(builder: (context, state) {
-                    // posts loaded
-                    if (state is PostsLoaded) {
-                      // filter posts by user id
-                      final userPosts = state.posts
-                          .where((post) => post.userId == widget.uid)
-                          .toList();
-
-                      postCount = userPosts.length;
-
-                      return ListView.builder(
-                          itemCount: postCount,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            // get individual post
-                            final post = userPosts[index];
-
-                            // return as post title UI
-                            return PostTitle(
-                              post: post,
-                              onDeletePressed: () =>
-                                  context.read<PostCubit>().deletePost(post.id),
-                            );
-                          });
-                    }
-
-                    // posts loading...
-                    else if (state is PostsLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return const Center(
-                        child: Text('Nenhum post encontrado'),
-                      );
-                    }
-                  })
-                ],
-              ))
-            );
-        }
-
-        // loading...
-        else if (state is ProfileLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else {
-          return const Scaffold(
-            body: Center(
-              child: Text('Perfil não encontrado'),
-            ),
-          );
-        }
-      },
-    );
-  }
 }
