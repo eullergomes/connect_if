@@ -1,3 +1,4 @@
+import 'package:connect_if/features/services/chat/chat_service.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 
@@ -23,23 +24,98 @@ class ChatBubble extends StatelessWidget {
         return SafeArea(
           child: Wrap(
             children: [
-              // report message button
-              // ListTitle(
-              //   loading: const Icon(Icons.flag),
-              //   title: const Text('Report'),
-              //   onTap() {},
-              // )
+              ListTile(
+                leading: const Icon(Icons.flag),
+                title: const Text('Reportar'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _reportMessage(context, messageId, userId);
+                },
+              ),
 
               // block user button
-
+              ListTile(
+                leading: const Icon(Icons.block),
+                title: const Text('Bloquear'),
+                onTap: () {
+                  Navigator.pop(context);
+                  blockUser(context, userId);
+                },
+              ),
+              
               // cancel button
+              ListTile(
+                leading: const Icon(Icons.cancel),
+                title: const Text('Cancelar'),
+                onTap: () => Navigator.pop(context),
+              ),
             ],
           )
         );
       }
     );
   }
-  
+
+  // report message
+  void _reportMessage(BuildContext context, String messageId, String userId) {
+    showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text('Reportar mensagem'),
+        content: const Text('Você tem certeza que deseja reportar esta mensagem?'),
+        actions: [
+          // cancel button
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+
+          // report button
+          TextButton(
+            onPressed: () {
+              ChatService().reportUser(messageId, userId);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Mensagem reportada com sucesso!')));
+            },
+            child: const Text('Reportar'),
+          )
+        ],
+      ),
+    );
+  }
+
+  // block user
+  void blockUser(BuildContext context, String userId) {
+    showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: const Text('Bloquear usuário'),
+        content: const Text('Você tem certeza que deseja bloquear este usuário?'),
+        actions: [
+          // cancel button
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+
+          // block button
+          TextButton(
+            onPressed: () {
+              ChatService().blockUser(userId);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Usuário bloqueado com sucesso!')));
+            },
+            child: const Text('Bloquear'),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

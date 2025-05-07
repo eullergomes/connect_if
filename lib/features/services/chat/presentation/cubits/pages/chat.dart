@@ -34,7 +34,7 @@ class ChatScreen extends StatelessWidget {
   // build a list of users except the current logged in user
   Widget _buildUserList() {
     return StreamBuilder(
-      stream: _chatService.getUsersStream(),
+      stream: _chatService.getUsersStreamExcludingBlocked(),
       builder: (context, snapshot) {
         // error
         if (snapshot.hasError) {

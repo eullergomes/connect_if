@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:connect_if/ui/themes/class_themes.dart';
-
 class UserTitle extends StatelessWidget {
   final String text;
   final String? profileImageUrl;
