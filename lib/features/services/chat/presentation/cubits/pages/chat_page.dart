@@ -128,7 +128,6 @@ class _ChatPageState extends State<ChatPage> {
 
   // build message list
   Widget _buildMessageList() {
-    // String senderId = firebaseAuthRepo.getCurrentUser()!.uid;
     String senderId = getCurrentUser()!.uid;
 
     return StreamBuilder(

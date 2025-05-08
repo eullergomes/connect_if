@@ -1,6 +1,6 @@
 import 'package:connect_if/features/services/auth/data/firebase_auth_repo.dart';
 import 'package:connect_if/features/services/chat/chat_service.dart';
-import 'package:connect_if/features/services/chat/presentation/components/user_title.dart';
+import 'package:connect_if/features/services/chat/presentation/components/user_tile.dart';
 import 'package:connect_if/features/services/chat/presentation/cubits/pages/chat_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +63,7 @@ class ChatScreen extends StatelessWidget {
   if (userData['email'] != getCurrentUser()!.email) {
     final profileImageUrl = userData['profileImageUrl'] ?? '';
 
-    return UserTitle(
+    return UserTile(
       text: userData['name'],
       profileImageUrl: profileImageUrl,
       onTap: () {

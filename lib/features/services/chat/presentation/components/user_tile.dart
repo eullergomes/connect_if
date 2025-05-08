@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-class UserTitle extends StatelessWidget {
+
+class UserTile extends StatelessWidget {
   final String text;
   final String? profileImageUrl;
   final void Function()? onTap;
 
-  const UserTitle({
+  const UserTile({
     super.key,
     required this.text,
     required this.onTap,

@@ -40,7 +40,7 @@ class FollowerPage extends StatelessWidget {
           body: TabBarView(
             children: [
               _buildUserList(followers, "Sem seguidores", context),
-              _buildUserList(followers, "Sem seguindo", context),
+              _buildUserList(following, "Sem seguindo", context),
             ]),
         ),
       );
