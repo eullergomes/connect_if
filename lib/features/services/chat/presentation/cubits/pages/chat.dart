@@ -34,7 +34,7 @@ class ChatScreen extends StatelessWidget {
   // build a list of users except the current logged in user
   Widget _buildUserList() {
     return StreamBuilder(
-      stream: _chatService.getUsersStreamExcludingBlocked(),
+      stream: _chatService.getFollowingUsersStream(),
       builder: (context, snapshot) {
         // error
         if (snapshot.hasError) {
@@ -59,29 +59,29 @@ class ChatScreen extends StatelessWidget {
   }
 
   // build individual user title for user
-  Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context) {
-  if (userData['email'] != getCurrentUser()!.email) {
-    final profileImageUrl = userData['profileImageUrl'] ?? '';
+  Widget _buildUserListItem(
+      Map<String, dynamic> userData, BuildContext context) {
+    if (userData['email'] != getCurrentUser()!.email) {
+      final profileImageUrl = userData['profileImageUrl'] ?? '';
 
-    return UserTile(
-      text: userData['name'],
-      profileImageUrl: profileImageUrl,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatPage(
-              receiverName: userData['name'],
-              receiverProfileImageUrl: profileImageUrl,
-              receiverId: userData['uid'],
+      return UserTile(
+        text: userData['name'],
+        profileImageUrl: profileImageUrl,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(
+                receiverName: userData['name'],
+                receiverProfileImageUrl: profileImageUrl,
+                receiverId: userData['uid'],
+              ),
             ),
-          ),
-        );
-      },
-    );
-  } else {
-    return Container();
+          );
+        },
+      );
+    } else {
+      return Container();
+    }
   }
-}
-
 }
