@@ -58,6 +58,7 @@ class _PostTitleState extends State<PostTitle> {
 
   Future<void> fetchPostUser() async {
     final fetchedUser = await profileCubit.getUserProfile(widget.post.userId);
+    if (!mounted) return;
     if (fetchedUser != null) {
       setState(() {
         postUser = fetchedUser;
@@ -75,6 +76,7 @@ class _PostTitleState extends State<PostTitle> {
     final isLiked = widget.post.likes.contains(currentUser!.uid);
 
     // optimistically like & update UI
+  if (!mounted) return;
     setState(() {
       if (isLiked) {
         widget.post.likes.remove(currentUser!.uid); // unlike
@@ -86,6 +88,7 @@ class _PostTitleState extends State<PostTitle> {
     // update like
     postCubit.toggleLikePost(widget.post.id, currentUser!.uid).catchError((error) {
       // revert like & update UI
+      if (!mounted) return;
       setState(() {
         if (isLiked) {
           widget.post.likes.add(currentUser!.uid); // revert unlike
