@@ -3,6 +3,7 @@ import 'package:connect_if/features/services/auth/data/firebase_auth_repo.dart';
 import 'package:connect_if/features/services/auth/presentation/components/my_text_field.dart';
 import 'package:connect_if/features/services/chat/chat_service.dart';
 import 'package:connect_if/features/services/chat/presentation/components/chat_bubble.dart';
+import 'package:connect_if/features/profile/presentation/pages/profile_page.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -63,12 +64,15 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     myFocusNode.dispose();
     _messageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   // scroll controller
   final ScrollController _scrollController = ScrollController();
   void scrollDown() {
+    if (!mounted) return;
+    if (!_scrollController.hasClients) return;
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
       duration: const Duration(seconds: 1),
@@ -101,18 +105,26 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
         elevation: 0,
-        title: Row(
-          children: [
-        widget.receiverProfileImageUrl.isNotEmpty
-          ? CircleAvatar(
-          backgroundImage: NetworkImage(widget.receiverProfileImageUrl),
-            )
-          : const CircleAvatar(
-          child: Icon(Icons.person),
+        title: InkWell(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(uid: widget.receiverId),
             ),
-        const SizedBox(width: 10),
-        Text(widget.receiverName),
-          ],
+          ),
+          child: Row(
+            children: [
+              widget.receiverProfileImageUrl.isNotEmpty
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(widget.receiverProfileImageUrl),
+                    )
+                  : const CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
+              const SizedBox(width: 10),
+              Text(widget.receiverName),
+            ],
+          ),
         ),
       ),
       body: Column(
