@@ -11,6 +11,7 @@ import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class UploadPostPage extends StatefulWidget {
   const UploadPostPage({super.key});
@@ -68,7 +69,7 @@ class _UploadPostPageState extends State<UploadPostPage> {
     if (imagePickedFile == null || textController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Insira a imagem e a legenda'),
+          content: Text('Insira a imagem e a descrição'),
         ),
       );
       return;
@@ -138,30 +139,115 @@ class _UploadPostPageState extends State<UploadPostPage> {
       appBar: AppBar(
         title: const Text("Criar post"),
         foregroundColor: AppThemeCustom.gray900,
-        actions: [
-          // upload button
-          IconButton(
-            onPressed: uploadPost,
-            icon: const Icon(Icons.upload),
-          ),
-        ],
       ),
 
       // BODY
       body: Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-        // image preview for web
-        if (kIsWeb && imagePickedFile != null)
-          Image.file(File(imagePickedFile!.path!)),
-
-        const SizedBox(height: 20),
-
-        // pick image button
-        MaterialButton(
-          onPressed: pickImage,
-          color: AppThemeCustom.green500,
-          child: const Text("Escolher imagem", style: TextStyle(color: AppThemeCustom.black)),
+        // tappable image area (empty before selection, adopts image size after)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Builder(
+              builder: (context) {
+                // show selected image (web)
+                if (kIsWeb && webImage != null) {
+                  return Stack(
+                    children: [
+                      Image.memory(
+                        webImage!,
+                        fit: BoxFit.contain,
+                        width: double.infinity,
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              webImage = null;
+                              imagePickedFile = null;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            padding: const EdgeInsets.all(6),
+                            child: SvgPicture.asset('assets/images/x-icon.svg'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                // show selected image (mobile/desktop)
+                if (!kIsWeb && imagePickedFile?.path != null) {
+                  return Stack(
+                    children: [
+                      Image.file(
+                        File(imagePickedFile!.path!),
+                        fit: BoxFit.contain,
+                        width: double.infinity,
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              imagePickedFile = null;
+                              webImage = null;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            padding: const EdgeInsets.all(6),
+                            child: SvgPicture.asset('assets/images/x-icon.svg'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                // empty placeholder before selection with centered upload icon; whole area is tappable
+                return GestureDetector(
+                  onTap: pickImage,
+                  child: Container(
+                    height: 250,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/images/upload-icon.svg',
+                        width: 40,
+                        height: 40,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
 
         const SizedBox(height: 20),
@@ -176,6 +262,23 @@ class _UploadPostPageState extends State<UploadPostPage> {
           ),
         )
           ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: SizedBox(
+            width: double.infinity,
+            child: MaterialButton(
+              onPressed: uploadPost,
+              color: AppThemeCustom.green500,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: const Text(
+                "Publicar",
+                style: TextStyle(color: AppThemeCustom.black, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
         ),
       ),
     );
