@@ -30,6 +30,7 @@ class FollowerPage extends StatelessWidget {
             dividerColor: Colors.transparent,
             labelColor: AppThemeCustom.black,
             unselectedLabelColor: AppThemeCustom.green400,
+            indicatorColor: AppThemeCustom.green500,
             tabs: const [
               Tab(text: "Seguidores"),
               Tab(text: "Seguindo",)
