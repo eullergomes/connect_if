@@ -90,6 +90,9 @@ flutter:
     - assets/images/conversations_icon.svg
     - assets/images/create_icon.svg
     - assets/images/profile_icon.svg
+    - assets/images/plus-icon.svg
+    - assets/images/upload-icon.svg
+    - assets/images/x-icon.svg
     - assets/images/my_user.jpg
     - assets/images/userImage1.jpg
     - assets/images/userImage2.jpg
