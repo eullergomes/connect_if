@@ -40,6 +40,9 @@ class _PostTitleState extends State<PostTitle> {
 
   // post user
   ProfileUser? postUser;
+  
+  // comments UI control
+  bool _showAllComments = false;
 
   // on startup
   @override
@@ -185,6 +188,28 @@ class _PostTitleState extends State<PostTitle> {
     );
   }
 
+  // Format post timestamp to a user-friendly string (pt-BR)
+  String _formatTimestamp(DateTime ts) {
+    final now = DateTime.now();
+    Duration diff = now.difference(ts);
+
+    // Handle future timestamps gracefully
+    if (diff.isNegative) {
+      diff = Duration(seconds: 0);
+    }
+
+    if (diff.inSeconds < 60) return 'agora';
+    if (diff.inMinutes < 60) return 'há ${diff.inMinutes} min';
+    if (diff.inHours < 24) return 'há ${diff.inHours} h';
+    if (diff.inDays == 1) return 'ontem';
+    if (diff.inDays < 7) return 'há ${diff.inDays} d';
+
+    final d = ts.day.toString().padLeft(2, '0');
+    final m = ts.month.toString().padLeft(2, '0');
+    final y = ts.year.toString();
+    return '$d/$m/$y';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -257,16 +282,6 @@ Padding(
                       ),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () {
-                        // Ação do menu "mais opções"
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => const SizedBox(
-                            height: 100,
-                            child: Center(child: Text('Mais opções')),
-                          ),
-                        );
-                      },
                       child: Icon(
                         Icons.more_vert,
                         color: AppThemeCustom.black,
@@ -356,7 +371,13 @@ Padding(
                 const Spacer(),
 
                 // timestamp
-                Text(widget.post.timestamp.toString()),
+                Text(
+                  _formatTimestamp(widget.post.timestamp),
+                  style: TextStyle(
+                    color: AppThemeCustom.black,
+                    fontSize: 12,
+                  ),
+                ),
               ],
             ),
             
@@ -368,27 +389,58 @@ Padding(
               // LOADED
               if (state is PostsLoaded) {
                 // final individual post
-                final post = state.posts
-                  .firstWhere((post) => post.id == widget.post.id);
+                final post = state.posts.firstWhere((post) => post.id == widget.post.id);
 
-                  if (post.comments.isNotEmpty) {
-                    // how many comments to show
-                    int showCommentCount = post.comments.length;
-                    
-                    // comment section
-                    return ListView.builder(
-                      itemCount: showCommentCount,
+                final comments = List<Comment>.from(post.comments);
+                // show newest first
+                comments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+                if (comments.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Seja o primeiro a comentar',
+                        style: TextStyle(color: AppThemeCustom.black, fontSize: 12),
+                      ),
+                    ),
+                  );
+                }
+
+                final total = comments.length;
+                final showCount = _showAllComments ? total : (total > 2 ? 2 : total);
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (total > 2)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() => _showAllComments = !_showAllComments);
+                            },
+                            child: Text(
+                              _showAllComments ? 'Ocultar comentários' : 'Ver todos os $total comentários',
+                              style: TextStyle(color: AppThemeCustom.black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ListView.builder(
+                      itemCount: showCount,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        // get individual comment
-                        final comment = post.comments[index];
-
-                        // comment title UI
+                        final comment = comments[index];
                         return CommentTitle(comment: comment);
                       },
-                    );
-                  }
+                    ),
+                  ],
+                );
               }
 
               // LOADING...
