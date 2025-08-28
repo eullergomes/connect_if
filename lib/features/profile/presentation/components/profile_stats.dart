@@ -12,68 +12,74 @@ class ProfileStats extends StatelessWidget {
   final int postCount;
   final int followersCount;
   final int followingCount;
-  final void Function()? onTap;
+  final VoidCallback? onPostsTap;
+  final VoidCallback? onFollowersTap;
+  final VoidCallback? onFollowingTap;
 
   const ProfileStats({
     super.key,
     required this.postCount,
     required this.followersCount,
     required this.followingCount,
-    required this.onTap,
+    this.onPostsTap,
+    this.onFollowersTap,
+    this.onFollowingTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    // text style for count
-    var textStyleForCount = TextStyle(
+    final textStyleForCount = TextStyle(
       fontSize: 20,
-      color: AppThemeCustom.black
+      color: AppThemeCustom.black,
     );
+    final textStyleForText = TextStyle(color: AppThemeCustom.black);
 
-    // text style for text
-    var textStyleForText = TextStyle(
-      color: AppThemeCustom.black
-    );
-    return GestureDetector(
-      onTap: onTap,
-      child: Center(
+    return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-        // posts
-        SizedBox(
-          width: 100,
-          child: Column(
-          children: [
-            Text(postCount.toString(), style: textStyleForCount,),
-            Text("Postagens", style: textStyleForText,),
-          ],
+          // Postagens
+          GestureDetector(
+            onTap: onPostsTap,
+            child: SizedBox(
+              width: 100,
+              child: Column(
+                children: [
+                  Text(postCount.toString(), style: textStyleForCount),
+                  Text("Postagens", style: textStyleForText),
+                ],
+              ),
+            ),
           ),
-        ),
-      
-        // followers
-        SizedBox(
-          width: 100,
-          child: Column(
-          children: [
-            Text(followersCount.toString(), style: textStyleForCount,),
-            Text("Seguindo", style: textStyleForText,),
-          ],
+
+          // Seguindo
+          GestureDetector(
+            onTap: onFollowingTap,
+            child: SizedBox(
+              width: 100,
+              child: Column(
+                children: [
+                  Text(followingCount.toString(), style: textStyleForCount),
+                  Text("Seguindo", style: textStyleForText),
+                ],
+              ),
+            ),
           ),
-        ),
-      
-        // seguidores
-        SizedBox(
-          width: 100,
-          child: Column(
-          children: [
-            Text(followingCount.toString(), style: textStyleForCount,),
-            Text("Seguidores", style: textStyleForText,),
-          ],
+
+          // Seguidores
+          GestureDetector(
+            onTap: onFollowersTap,
+            child: SizedBox(
+              width: 100,
+              child: Column(
+                children: [
+                  Text(followersCount.toString(), style: textStyleForCount),
+                  Text("Seguidores", style: textStyleForText),
+                ],
+              ),
+            ),
           ),
-        )
         ],
-      ),
       ),
     );
   }

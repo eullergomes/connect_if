@@ -1,9 +1,9 @@
-import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
-import 'package:connect_if/features/chat/pages/conversations_screen.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit.dart';
+// import 'package:connect_if/features/chat/pages/conversations_screen.dart';
 import 'package:connect_if/features/home/presentation/pages/feed_screen.dart';
 import 'package:connect_if/features/post/presentation/pages/upload_post_page.dart';
 import 'package:connect_if/features/profile/presentation/pages/profile_page.dart';
-import 'package:connect_if/features/search/pages/search_page.dart';
+import 'package:connect_if/features/services/chat/presentation/cubits/pages/chat.dart';
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +28,8 @@ class HomePageState extends State<HomePage> {
     uid = user!.uid;
     _screens = [
       const FeedScreen(),
-      const ChatScreen(),
+      // const ChatScreen(),
+      ChatScreen(),
       const UploadPostPage(),
       ProfilePage(uid: uid),
     ];

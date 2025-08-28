@@ -30,6 +30,7 @@ class FollowerPage extends StatelessWidget {
             dividerColor: Colors.transparent,
             labelColor: AppThemeCustom.black,
             unselectedLabelColor: AppThemeCustom.green400,
+            indicatorColor: AppThemeCustom.green500,
             tabs: const [
               Tab(text: "Seguidores"),
               Tab(text: "Seguindo",)
@@ -40,7 +41,7 @@ class FollowerPage extends StatelessWidget {
           body: TabBarView(
             children: [
               _buildUserList(followers, "Sem seguidores", context),
-              _buildUserList(followers, "Sem seguindo", context),
+              _buildUserList(following, "Sem seguindo", context),
             ]),
         ),
       );

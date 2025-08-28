@@ -10,10 +10,8 @@ class PostCubit extends Cubit<PostStates> {
   final PostRepo postRepo;
   final StorageRepo storageRepo;
 
-  PostCubit({
-    required this.postRepo, 
-    required this.storageRepo
-  }) : super(PostsInitial());
+  PostCubit({required this.postRepo, required this.storageRepo})
+      : super(PostsInitial());
 
   // create a new post
   Future<void> createPost(Post post,
@@ -24,8 +22,7 @@ class PostCubit extends Cubit<PostStates> {
       // handle image upload for mobile platforms (using file path)
       if (imagePath != null) {
         emit(PostUploading());
-        imageUrl =
-            await storageRepo.uploadPostImageMobile(imagePath, post.id);
+        imageUrl = await storageRepo.uploadPostImageMobile(imagePath, post.id);
       }
 
       // handle image upload for web platforms (using file bytes)
@@ -52,6 +49,17 @@ class PostCubit extends Cubit<PostStates> {
     try {
       emit(PostsLoading());
       final posts = await postRepo.fetchAllPosts();
+      emit(PostsLoaded(posts));
+    } catch (e) {
+      emit(PostsError("Erro ao buscar posts: $e"));
+    }
+  }
+
+  // fetch posts by user id
+  Future<void> fetchFollowingPosts(List<String> followingUserIds) async {
+    try {
+      emit(PostsLoading());
+      final posts = await postRepo.fetchPostsByUserIds(followingUserIds);
       emit(PostsLoaded(posts));
     } catch (e) {
       emit(PostsError("Erro ao buscar posts: $e"));
@@ -90,7 +98,7 @@ class PostCubit extends Cubit<PostStates> {
   Future<void> deleteComment(String postId, String commentId) async {
     try {
       await postRepo.deleteComment(postId, commentId);
-      
+
       await fetchAllPosts();
     } catch (e) {
       emit(PostsError("Erro ao apagar comentário: $e"));

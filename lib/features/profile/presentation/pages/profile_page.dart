@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connect_if/features/config/pages/config_page.dart';
 import 'package:connect_if/features/post/presentation/components/post_title.dart';
 import 'package:connect_if/features/post/presentation/cubits/post_cubit.dart';
 import 'package:connect_if/features/post/presentation/cubits/posts_states.dart';
+import 'package:connect_if/features/post/domain/entities/post.dart';
 import 'package:connect_if/features/profile/presentation/components/bio_box.dart';
 import 'package:connect_if/features/profile/presentation/components/follow_button.dart';
 import 'package:connect_if/features/profile/presentation/components/profile_stats.dart';
@@ -12,8 +14,8 @@ import 'package:connect_if/features/profile/presentation/pages/follower_page.dar
 import 'package:connect_if/ui/themes/class_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
-import 'package:connect_if/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/presentation/cubits/auth_cubit.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
@@ -23,6 +25,8 @@ class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
+
+enum _ProfileMenuOption { edit, settings, logout }
 
 class _ProfilePageState extends State<ProfilePage> {
   // cubits
@@ -86,207 +90,245 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // is own post
     final isOwnPost = (widget.uid == currentUser!.uid);
+
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
-        // loaded
         if (state is ProfileLoaded) {
-          // get loaded user
           final user = state.profileUser;
 
-            return Scaffold(
-              // APP BAR
-              appBar: AppBar(
+          return Scaffold(
+            appBar: AppBar(
               title: Text(user.name),
               foregroundColor: AppThemeCustom.black,
               actions: [
-              // edit profile
-              if (isOwnPost)
-              IconButton(
-                onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                builder: (context) => EditProfilePage(user: user),
-                )),
-                icon: const Icon(Icons.edit),
-              ),
-              // logout
-              IconButton(
-              onPressed: () {
-                authCubit.logout();
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
-              icon: const Icon(Icons.logout),
-              ),
+                if (isOwnPost)
+                  PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_vert),
+                    onSelected: (value) {
+                      switch (value) {
+                        case 'edit':
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfilePage(user: user),
+                            ),
+                          );
+                          break;
+                        case 'settings':
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SettingsPage(),
+                            ),
+                          );
+                          break;
+                        case 'logout':
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Confirmar saída'),
+                              content:
+                                  const Text('Você realmente deseja sair?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context), // Fecha o modal
+                                  child: const Text(
+                                    'Cancelar',
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context); // Fecha o modal
+                                    authCubit.logout();
+                                    Navigator.of(context)
+                                        .popUntil((route) => route.isFirst);
+                                  },
+                                  child: const Text(
+                                    'Sair',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                          break;
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: ListTile(
+                          leading: Icon(Icons.edit),
+                          title: Text('Editar perfil'),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'settings',
+                        child: ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text('Configurações'),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'logout',
+                        child: ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Sair'),
+                        ),
+                      ),
+                    ],
+                  ),
               ],
-              ),
+            ),
+            body: BlocBuilder<PostCubit, PostStates>(
+              builder: (context, postState) {
+                List<Post> userPosts = [];
+                if (postState is PostsLoaded) {
+                  userPosts = postState.posts
+                      .where((post) => post.userId == widget.uid)
+                      .toList();
+                }
 
-              // BODY
-              body: Padding(
-              padding: const EdgeInsets.only(top: 10.0), // Added spacing
-              child: ListView(
-              children: [
-                // email
-                  Center(
-                    child: Text(
-                      user.email,
-                      style: TextStyle(color: AppThemeCustom.black),
-                    ),
-                  ),
-
-                  // profile pic
-                  const SizedBox(height: 20),
-                  CachedNetworkImage(
-                    imageUrl: user.profileImageUrl,
-                    // loading
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-
-                    // error -> failed to load
-                    errorWidget: (context, url, error) => Icon(
-                      Icons.person,
-                      size: 72,
-                      color: AppThemeCustom.black,
-                    ),
-
-                    // loaded
-                    imageBuilder: (context, imageProvider) => Container(
-                      height: 120,
-                      width: 120,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit
-                                .contain, // Changed from BoxFit.cover to BoxFit.contain
-                          )),
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // profile stats
-                  ProfileStats(
-                    postCount: postCount,
-                    followersCount: user.followers.length,
-                    followingCount: user.following.length,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FollowerPage(
+                return Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: ListView(
+                    children: [
+                      Center(
+                        child: Text(
+                          user.email,
+                          style: TextStyle(color: AppThemeCustom.black),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      CachedNetworkImage(
+                        imageUrl: user.profileImageUrl,
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.person,
+                          size: 72,
+                          color: AppThemeCustom.black,
+                        ),
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 120,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      ProfileStats(
+                        postCount: userPosts.length,
+                        followersCount: user.followers.length,
+                        followingCount: user.following.length,
+                        onPostsTap: () {
+                          // No-op ou rolar para os posts
+                        },
+                        onFollowersTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FollowerPage(
                                 followers: user.followers,
                                 following: user.following,
-                              )),
-                    ),
-                  ),
-                  // follow button
-                    if (!isOwnPost)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: FollowButton(
-                      onPressed: followButtonPressed,
-                      isFollowing: user.followers.contains(currentUser!.uid),
+                              ),
+                            ),
+                          );
+                        },
+                        onFollowingTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FollowerPage(
+                                followers: user.followers,
+                                following: user.following,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-
-                  // bio box
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25.0, top: 25.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Bio",
-                          style: TextStyle(
-                            color: AppThemeCustom.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                      if (!isOwnPost)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: FollowButton(
+                            onPressed: followButtonPressed,
+                            isFollowing:
+                                user.followers.contains(currentUser!.uid),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  BioBox(text: user.bio),
-
-                  const SizedBox(height: 10),
-
-                    // posts
-                    Padding(
-                    padding: const EdgeInsets.only(left: 25.0, top: 25),
-                    child: Row(
-                      children: [
-                      Text(
-                        "Posts",
-                        style: TextStyle(
-                          color: AppThemeCustom.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16), // Increased font size
-                      )
-                      ],
-                    ),
-                    ),
-
-                  const SizedBox(height: 10),
-
-                  // list of posts from this user
-                  BlocBuilder<PostCubit, PostStates>(builder: (context, state) {
-                    // posts loaded
-                    if (state is PostsLoaded) {
-                      // filter posts by user id
-                      final userPosts = state.posts
-                          .where((post) => post.userId == widget.uid)
-                          .toList();
-
-                      postCount = userPosts.length;
-
-                      return ListView.builder(
-                          itemCount: postCount,
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25.0, top: 25.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Bio",
+                              style: TextStyle(
+                                color: AppThemeCustom.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      BioBox(text: user.bio),
+                      const SizedBox(height: 25),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Posts",
+                              style: TextStyle(
+                                color: AppThemeCustom.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      if (postState is PostsLoaded)
+                        ListView.builder(
+                          itemCount: userPosts.length,
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            // get individual post
                             final post = userPosts[index];
-
-                            // return as post title UI
                             return PostTitle(
                               post: post,
                               onDeletePressed: () =>
                                   context.read<PostCubit>().deletePost(post.id),
                             );
-                          });
-                    }
-
-                    // posts loading...
-                    else if (state is PostsLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return const Center(
-                        child: Text('Nenhum post encontrado'),
-                      );
-                    }
-                  })
-                ],
-              ))
-            );
-        }
-
-        // loading...
-        else if (state is ProfileLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+                          },
+                        )
+                      else if (postState is PostsLoading)
+                        const Center(child: CircularProgressIndicator())
+                      else
+                        const Center(child: Text('Nenhum post encontrado')),
+                    ],
+                  ),
+                );
+              },
             ),
+          );
+        } else if (state is ProfileLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
           );
         } else {
           return const Scaffold(
-            body: Center(
-              child: Text('Perfil não encontrado'),
-            ),
+            body: Center(child: Text('Perfil não encontrado')),
           );
         }
       },

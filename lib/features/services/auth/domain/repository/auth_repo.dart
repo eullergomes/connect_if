@@ -2,7 +2,7 @@
 Auth Repository - Outlines the possible auth operations for this app
 */
 
-import 'package:connect_if/features/auth/domain/entities/app_user.dart';
+import 'package:connect_if/features/services/auth/domain/entities/app_user.dart';
 
 abstract class AuthRepo {
   Future<AppUser?> loginWithEmailPassword(String email, String password);

@@ -21,14 +21,14 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   void onSearchChanged() {
     widget.onSearchChanged(searchController.text);
-    setState(() {}); // atualiza o botão de limpar dinamicamente
+    setState(() {});
   }
 
   void clearSearch() {
     searchController.clear();
     widget.onSearchChanged('');
     setState(() {});
-    FocusScope.of(context).unfocus(); // fecha o teclado também
+    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -59,7 +59,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: AppThemeCustom.green100,
+            fillColor: AppThemeCustom.gray100,
             prefixIcon: Icon(Icons.search, color: AppThemeCustom.black),
             suffixIcon: searchController.text.isNotEmpty
                 ? IconButton(

@@ -7,8 +7,8 @@ class FirebasePostRepos implements PostRepo {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   // store the posts in a collection called 'posts'
-  final CollectionReference postsCollection = 
-    FirebaseFirestore.instance.collection('posts');
+  final CollectionReference postsCollection =
+      FirebaseFirestore.instance.collection('posts');
 
   @override
   Future<void> createPost(Post post) async {
@@ -28,13 +28,13 @@ class FirebasePostRepos implements PostRepo {
   Future<List<Post>> fetchAllPosts() async {
     try {
       // get all posts with most recent at the top
-      final postSnapshot = 
-        await postsCollection.orderBy('timestamp', descending: true).get();
-    
+      final postSnapshot =
+          await postsCollection.orderBy('timestamp', descending: true).get();
+
       // convert each firestore document from json -> list of posts
       final List<Post> allPosts = postSnapshot.docs
-        .map((doc) => Post.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+          .map((doc) => Post.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
 
       return allPosts;
     } catch (e) {
@@ -46,18 +46,29 @@ class FirebasePostRepos implements PostRepo {
   Future<List<Post>> fetchPostsByUserId(String userId) async {
     try {
       // fetch posts snapshot with this uid
-      final postSnapshot = 
-        await postsCollection.where('userId', isEqualTo: userId).get();
+      final postSnapshot =
+          await postsCollection.where('userId', isEqualTo: userId).get();
 
       // convert firestore documents from json -> list of posts
       final userPosts = postSnapshot.docs
-        .map((doc) => Post.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+          .map((doc) => Post.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
 
       return userPosts;
     } catch (e) {
       throw Exception("Erro ao buscar os posts do usuário: $e");
     }
+  }
+
+ //O whereIn do Firestore tem limite de 10 elementos. Se a lista following for maior que isso, será necessário paginar ou fazer múltiplas queries.
+  @override
+  Future<List<Post>> fetchPostsByUserIds(List<String> userIds) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('userId', whereIn: userIds)
+        .get();
+
+    return querySnapshot.docs.map((doc) => Post.fromJson(doc.data())).toList();
   }
 
   @override

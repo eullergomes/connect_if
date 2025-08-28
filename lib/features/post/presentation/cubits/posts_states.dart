@@ -18,5 +18,3 @@ class PostsLoaded extends PostStates {
   final List<Post> posts;
   PostsLoaded(this.posts);
 }
-
-
